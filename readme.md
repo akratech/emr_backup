@@ -1,13 +1,6 @@
-# NOSH ChartingSystem Installation Instructions
-
-## Preparation:
-You'll need to have the following applications/packages installed on your system prior to installation
-of NOSH ChartingSystem.  If you have a LAMP (Linux-Apache-mySQL-PHP) or MAMP (Mac-Apache-mySQL-PHP) server
-already set up, you are golden!
 
 ##### 1. Apache web server (needs to be running)
-##### 2. MySQL database.  Make sure you remember the root password.  This will be asked during the
-NOSH ChartingSystem installation. (needs to be running)
+##### 2. MySQL database.  
 ##### 3. PHP 5.2 and higher
 ##### 4. The following PHP modules installed and enabled:
 mysql, imap, mcrypt, imagick, gd, cli, curl, soap, pear
@@ -16,22 +9,6 @@ mysql, imap, mcrypt, imagick, gd, cli, curl, soap, pear
 ##### 7. PDF ToolKit (pdftk)
 ##### 8. cURL
 
-## Installation
-Installing NOSH ChartingSystem is easy to install if you run [NOSH-in-a-Box](https://github.com/shihjay2/nosh-in-a-box) NOSH and all its dependencies are already configured and installed properly.  Just deploy the Vagrant virtual machine and you're ready to start.  The previous method through Ubuntu Linux PPA's is now depreciated.  If you have access to a terminal shell for your server (any distro for Linux or Mac OS-X), you can install NOSH with the [Manual Method](https://github.com/shihjay2/nosh-cs/wiki/Installation#manual-method).  
-The installation script automatically adds scheduled task commands (cron files) and web server configuration files to make NOSH
-work seamlessly the first time.  The script also determines if your system meets all the package dependencies before installation.
-For detailed information, go to the [Wiki link](https://github.com/shihjay2/nosh-cs/wiki/Installation).
-
-If this is the first time using NOSH, make sure you login to NOSH ChartingSystem as admin and configure your users and clinic
-parameters.  It's important to do this first before any other users use NOSH ChartingSystem; otherwise,
-some features such as scheduling will not work correctly!
-
-## Updates
-Like Laravel, NOSH now utilizes [Composer](http://getcomposer.org) to manage its PHP dependencies.  
-Composer is automatically installed when you use the installation script (it is located in /usr/local/bin/composer).
-Because the [core NOSH files](https://github.com/shihjay2/nosh-core/) are now served on GitHub, NOSH is self-updating daily
-whenever a new commit (updated files) is uploaded.  There is no more user intervention anymore, and you get the latest and greatest
-NOSH version at your fingertips!
 
 ## Update Notes for Version 2.0:
 ##### 1. Phaxio is now the only supported fax program.
@@ -145,10 +122,3 @@ will be explained here.  Some tables are depreciated if you happen to see the da
 	vaccine_temp - Vaccine temperature log
 	vitals - List of vital signs in a patient encounter.
 
-### Contributing To NOSH ChartingSystem
-
-**All issues and pull requests should be filed on the [shihjay2/nosh-core](http://github.com/shihjay2/nosh2) repository.**
-
-### License
-
-NOSH ChartingSystem is open-sourced software licensed under the [GNU Affero General Public License](http://www.gnu.org/licenses/)
