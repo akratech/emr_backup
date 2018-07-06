@@ -32,7 +32,8 @@
         "maatwebsite/excel": "~2.1.0",
         "rcamposp/tcpdi-merger": "0.3.*",
         "elibyy/tcpdf-laravel": "5.3.*",
-        "naviocean/laravel-nameparser": "dev-master"
+        "naviocean/laravel-nameparser": "dev-master",
+        "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -376,3 +376,10 @@ Route::any('providerregister/{api}', ['as' => 'providerregister', 'uses' => 'API
 
 // test
 Route::any('test1', array('as' => 'test1', 'uses' => 'InstallController@test1'));
+
+//Route::post('/doctor_register','Auth\AuthApiController@doctor')->name('doctor_register');
+//Route::post('/patient_register','Auth\AuthApiController@patient')->name('patient_register');
+
+//Route::get('doctor_register', ['as' => 'doctor_register', 'uses' => 'Auth/AuthApiController@doctor']);
+
+

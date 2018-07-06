@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="21be76ca-8d78-4ed4-9ff6-8d35afdbad11" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/AuthApiController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/nosh2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nosh2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,13 +23,52 @@
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="AuthController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Auth/AuthController.php">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="LoginController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LoginController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1260">
+              <caret line="104" column="25" selection-start-line="104" selection-start-column="17" selection-end-line="104" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/api.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="web.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/routes/web.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="550">
+              <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AuthApiController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Auth/AuthApiController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>practice_setup</find>
-      <find>url</find>
-      <find>secure_url</find>
       <find>assets_js</find>
       <find>Alaska</find>
       <find>core_form</find>
@@ -49,6 +96,9 @@
       <find>google</find>
       <find>florida</find>
       <find>Florida</find>
+      <find>AL</find>
+      <find>register</find>
+      <find>password</find>
     </findStrings>
     <replaceStrings>
       <replace>secure_asset(</replace>
@@ -64,9 +114,11 @@
         <option value="$PROJECT_DIR$/resources/views/core.blade.php" />
         <option value="$PROJECT_DIR$/resources/peacehealth.csv" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/CoreController.php" />
-        <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/Controller.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/Auth/AuthApiController.php" />
+        <option value="$PROJECT_DIR$/routes/api.php" />
+        <option value="$PROJECT_DIR$/routes/web.php" />
       </list>
     </option>
   </component>
@@ -198,6 +250,9 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
       <path value="$PROJECT_DIR$/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/vendor/laravel/tinker" />
+      <path value="$PROJECT_DIR$/vendor/maximebf/debugbar" />
+      <path value="$PROJECT_DIR$/vendor/barryvdh/laravel-debugbar" />
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
@@ -211,6 +266,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -218,15 +274,30 @@
               <item name="nosh2" type="b2602c69:ProjectViewProjectNode" />
               <item name="nosh2" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="nosh2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="nosh2" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="nosh2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="nosh2" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="nosh2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="nosh2" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="dropdown&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/node_modules/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js&#10;dropdown.php&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/vendor/phpoffice/phpexcel/Examples/39dropdown.php&#10;state&#9;null&#9;null&#10;.idea/workspace.xml&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/.idea/workspace.xml&#10; &#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/InstallController.php&#10;googleapis&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/vendor/google/apiclient-services/src/Google/Service/ServiceUsage/GoogleApiService.php&#10;google_start&#9;null&#9;null&#10;InstallController&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/InstallController.php&#10;uma_aat&#9;null&#9;null&#10;country&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/vendor/google/apiclient-services/src/Google/Service/Dfareporting/Country.php&#10;CoreController&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/CoreController.php&#10;assets_css&#9;null&#9;null&#10;assets_&#9;null&#9;null&#10;w&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/routes/web.php&#10;uma_list&#9;null&#9;null&#10;core.&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/resources/views/core.blade.php&#10;akrahealth_1523467410.png&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/public/assets/images/akrahealth_1523467410.png&#10;LoginController&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/LoginController.php&#10;uport-logo-white.svg&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/public/assets/uport-logo-white.svg&#10;akrahealth.png&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/public/assets/images/akrahealth_1523467410.png&#10;web.php&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/routes/web.php" />
+    <property name="SearchEverywhereHistoryKey" value="LoginController&#9;null&#9;null&#10;web.php&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/routes/web.php&#10;dropdown&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/node_modules/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js&#10;dropdown.php&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/vendor/phpoffice/phpexcel/Examples/39dropdown.php&#10;state&#9;null&#9;null&#10;.idea/workspace.xml&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/.idea/workspace.xml&#10; &#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/InstallController.php&#10;googleapis&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/vendor/google/apiclient-services/src/Google/Service/ServiceUsage/GoogleApiService.php&#10;google_start&#9;null&#9;null&#10;InstallController&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/InstallController.php&#10;uma_aat&#9;null&#9;null&#10;country&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/vendor/google/apiclient-services/src/Google/Service/Dfareporting/Country.php&#10;CoreController&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/app/Http/Controllers/CoreController.php&#10;assets_css&#9;null&#9;null&#10;assets_&#9;null&#9;null&#10;w&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/routes/web.php&#10;uma_list&#9;null&#9;null&#10;core.&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/resources/views/core.blade.php&#10;akrahealth_1523467410.png&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/public/assets/images/akrahealth_1523467410.png&#10;uport-logo-white.svg&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/public/assets/uport-logo-white.svg&#10;akrahealth.png&#9;FILE&#9;file:///Applications/XAMPP/xamppfiles/htdocs/nosh2/public/assets/images/akrahealth_1523467410.png" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -235,6 +306,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/routes" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/public/assets/images" />
       <recent name="$PROJECT_DIR$/public/assets" />
@@ -273,29 +345,34 @@
       <workItem from="1530565278321" duration="1431000" />
       <workItem from="1530650099282" duration="2239000" />
       <workItem from="1530725522543" duration="4526000" />
+      <workItem from="1530773319958" duration="1088000" />
+      <workItem from="1530786902499" duration="578000" />
+      <workItem from="1530787774096" duration="6148000" />
+      <workItem from="1530868630702" duration="607000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35434000" />
+    <option name="totallyTimeSpent" value="43855000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="817" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info id="npm" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.30555555" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.8055556" />
       <window_info id="Gulp" order="2" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28540772" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3018598" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -312,31 +389,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/resources/bfa_boys_p_exp.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/bfa_girls_p_exp.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-29" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/imaging.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="7" column="13" lean-forward="true" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/routes.yaml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/assets/sass/app.scss">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/noshreminder">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -368,9 +420,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitattributes">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.env.example">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/.env">
@@ -458,13 +507,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/vendor/phpoffice/phpexcel/Examples/39dropdown.php">
       <provider selected="true" editor-type-id="text-editor">
@@ -496,13 +539,7 @@
     <entry file="file://$PROJECT_DIR$/tests/ExampleTest.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/bootstrap/cache/compiled.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1434" column="2" selection-start-line="1434" selection-start-column="2" selection-end-line="1434" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/bootstrap/cache/compiled.php" />
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -511,7 +548,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database.sql">
+    <entry file="file://$PROJECT_DIR$/mobihealthemr.sql">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
@@ -521,50 +558,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.env.example">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Controller.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="1197" column="32" lean-forward="true" selection-start-line="1197" selection-start-column="32" selection-end-line="1197" selection-end-column="32" />
-          <folding>
-            <element signature="n#style#0;n#button#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#b#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#body#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#1;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#h5#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#1;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#2;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#3;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#1;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#2;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#3;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#1;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#2;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#3;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#4;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#5;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#0;n#tr#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#th#0;n#tr#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="12510">
+          <caret line="1461" column="30" selection-start-line="1461" selection-start-column="30" selection-end-line="1461" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Auth/AuthController.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/LoginController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="104" column="25" selection-start-line="104" selection-start-column="17" selection-end-line="104" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Auth/AuthApiController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
         </state>
       </provider>
     </entry>
