@@ -13,4 +13,4 @@ pipelines:
         script:
           - apt-get update && apt-get install -y unzip openssh-client
           - mkdir -p ~/.ssh
-          - scp -r $BUILD_DIR ubuntu@54.157.211.8:/home/ubuntu/mhi_emr
+          - scp -r $BITBUCKET_CLONE_DIR ubuntu@54.157.211.8:/home/ubuntu/mhi_emr
