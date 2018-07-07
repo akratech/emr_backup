@@ -8,5 +8,5 @@ pipelines:
         script:
           - apt-get update && apt-get install -y unzip openssh-client
           - mkdir -p ~/.ssh
-          - scp -r $BITBUCKET_CLONE_DIR ubuntu@54.157.211.8:/home/ubuntu/emr.mobihealthinternational.com
+          - scp -r $BITBUCKET_CLONE_DIR ubuntu@18.210.57.7:/home/ubuntu/emr.mobihealthinternational.com
           - ssh ubuntu@54.157.211.8 "cp /home/ubuntu/.env.emr-back-live /home/ubuntu/emr.mobihealthinternational.com && composer install -d /home/ubuntu/emr.mobihealthinternational.com && sudo -S chmod -R 0755 /home/ubuntu/emr.mobihealthinternational.com && sudo -S mv /var/www/emr.mobihealthinternational.com /var/www/emr.mobihealthinternational.com.old && sudo -S mv /home/ubuntu/emr.mobihealthinternational.com /var/www && sudo -S chown -R www-data:www-data /var/www/emr.mobihealthinternational.com && sudo -S rm -rf /var/www/emr.mobihealthinternational.com.old"
