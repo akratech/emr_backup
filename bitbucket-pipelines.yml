@@ -13,5 +13,5 @@ pipelines:
         script:
           - apt-get update && apt-get install -y unzip openssh-client
           - mkdir -p ~/.ssh
-          - scp -r $BITBUCKET_CLONE_DIR ubuntu@54.157.211.8:/home/ubuntu/mhi_emr
-          - ssh ubuntu@54.157.211.8 "composer install -d /home/ubuntu/mhi_emr && sudo -S chown -R www-data:www-data /home/ubuntu/mhi_emr && sudo -S chmod -R 0755 /home/ubuntu/mhi_emr && sudo -S mv /home/ubuntu/mhi_emr /var/www"
+          - scp -r $BITBUCKET_CLONE_DIR ubuntu@54.157.211.8:/home/ubuntu/emr.mobihealthinternational.com
+          - ssh ubuntu@54.157.211.8 "composer install -d /home/ubuntu/emr.mobihealthinternational.com && sudo -S chown -R www-data:www-data /home/ubuntu/emr.mobihealthinternational.com && sudo -S chmod -R 0755 /home/ubuntu/emr.mobihealthinternational.com && sudo -S mv /home/ubuntu/emr.mobihealthinternational.com /var/www"
