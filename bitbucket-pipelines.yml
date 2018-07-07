@@ -14,4 +14,4 @@ pipelines:
           - apt-get update && apt-get install -y unzip openssh-client
           - mkdir -p ~/.ssh
           - scp -r $BITBUCKET_CLONE_DIR ubuntu@54.157.211.8:/home/ubuntu/mhi_emr
-          - ssh ubuntu@54.157.211.8 composer install -d=/home/ubuntu/mhi_emr && sudo chown -R www-data:www-data /home/ubuntu/mhi-emr && sudo chmod -R 0755 /home/ubuntu/mhi_emr && sudo mv /home/ubuntu/mhi_emr /var/www
+          - ssh ubuntu@54.157.211.8 composer install -d /home/ubuntu/mhi_emr && sudo chown -R www-data:www-data /home/ubuntu/mhi-emr && sudo chmod -R 0755 /home/ubuntu/mhi_emr && sudo mv /home/ubuntu/mhi_emr /var/www
