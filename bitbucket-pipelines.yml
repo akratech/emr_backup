@@ -1,8 +1,3 @@
-# This is a sample build configuration for PHP.
-# Check our guides at https://confluence.atlassian.com/x/e8YWN for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
 image: php:latest
 
 pipelines:
@@ -14,4 +9,4 @@ pipelines:
           - apt-get update && apt-get install -y unzip openssh-client
           - mkdir -p ~/.ssh
           - scp -r $BITBUCKET_CLONE_DIR ubuntu@54.157.211.8:/home/ubuntu/emr.mobihealthinternational.com
-          - ssh ubuntu@54.157.211.8 "composer install -d /home/ubuntu/emr.mobihealthinternational.com && sudo -S chown -R www-data:www-data /home/ubuntu/emr.mobihealthinternational.com && sudo -S chmod -R 0755 /home/ubuntu/emr.mobihealthinternational.com && sudo -S mv /home/ubuntu/emr.mobihealthinternational.com /var/www"
+          - ssh ubuntu@54.157.211.8 "cp /home/ubuntu/.env.emr-back-live /home/ubuntu/emr.mobihealthinternational.com && composer install -d /home/ubuntu/emr.mobihealthinternational.com && sudo -S chown -R www-data:www-data /home/ubuntu/emr.mobihealthinternational.com && sudo -S chmod -R 0755 /home/ubuntu/emr.mobihealthinternational.com && sudo -S mv /var/www/emr.mobihealthinternational.com /var/www/emr.mobihealthinternational.com.old && sudo -S mv /home/ubuntu/emr.mobihealthinternational.com /var/www && sudo -S sudo -S mv /var/www/emr.mobihealthinternational.com /var/www/emr.mobihealthinternational.com.old"
