@@ -3,7 +3,7 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: php:7.1.1
+image: php:latest
 
 pipelines:
   default:
@@ -11,6 +11,6 @@ pipelines:
         caches:
           - composer
         script:
-          - apt-get update && apt-get install -y unzip
+          - apt-get update && apt-get install -y unzip openssh-client
           - mkdir -p ~/.ssh
           - scp -r $BUILD_DIR ubuntu@54.157.211.8:/home/ubuntu/mhi_emr
