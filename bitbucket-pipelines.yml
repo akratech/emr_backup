@@ -11,7 +11,8 @@ pipelines:
         caches:
           - composer
         script:
-          - apt-get update && apt-get install -y unzip php-cli php-fpm php-curl php-mbstring php-zip php-cgi php-mysql php-xml
+          - apt-get update && apt-get install -y unzip software-properties-common python-software-properties language-pack-en-base
+          - apt-get update --fix-missing && apt-get install -y php-cli php-fpm php-curl php-mbstring php-zip php-cgi php-mysql php-xml
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install
           - vendor/bin/phpunit
