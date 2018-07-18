@@ -35,7 +35,7 @@ return [
     "captcha_code" => "CAPTCHA Code",
     "captcha_code1" => "Enter CAPTCHA code here.",
     "button_register" => "Register",
-    "invite_title" => "Accept your invitation to access AKRA TELEHEALTH",
+    "invite_title" => "Accept your invitation to access Mobihealth International",
     "accept_invitation" => "Accept Invitation",
     "reset_password" => "Reset Password",
     "new_password" => "New Password",
@@ -370,7 +370,7 @@ return [
     "no_transaction" => "Transaction receipt not found",
 
     // Email
-    "api_provider_register1" => "This message is sent to you from one of your patients who has a AKRA TELEHEALTH electronic health record system.",
+    "api_provider_register1" => "This message is sent to you from one of your patients who has a Mobihealth International electronic health record system.",
     "api_provider_register2" => "Your account has been added to your patient's system, but you'll need to click on the following link to complete your registration.",
     "api_provider_register3" => "Make sure you have your Provider NPI with you as you'll need this information to successfully register your account.",
     "api_provider_register4" => "Furthermore, if you do not register for your account within 24 hours, you'll need to contact your patient to add your account again.",
@@ -378,7 +378,7 @@ return [
     "api_provider_register6" => "Make sure you have your Practice NPI (not Provider NPI) with you as you'll need this information to successfully register your practice.",
     "api_provider_register7" => "Furthermore, if you do not register for your account within 24 hours, you'll need to contact your patient to add your practice again.",
     "api_uma_register1" => "This message is sent to you from one of your patients, ",
-    "api_uma_register2" => ", who has a AKRA TELEHEALTH electronic health record system.",
+    "api_uma_register2" => ", who has a Mobihealth International electronic health record system.",
     "api_uma_register3" => "You have been invited to access your patient's health record.  Please click on the following link to complete your registration.",
     "api_uma_register4" => "Make sure you have your Provider NPI with you as you'll need this information to successfully register your account.",
     "api_uma_register5" => "Furthermore, if you do not register for your account within 24 hours, you'll need to contact your patient to send a valid invitation again.",

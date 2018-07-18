@@ -768,8 +768,8 @@ class CoreController extends Controller
                     $data['password'] = $this->gen_secret();
                     $data['created_at'] = date('Y-m-d H:i:s');
                     $url = URL::to('accept_invitation') . '/' . $data['password'];
-                    $email['message_data'] = 'You are invited to use the AKRA TELEHEALTH for ' . $practice->practice_name . '.<br>Go to ' . $url . ' to get registered.';
-                    $this->send_mail('auth.emails.generic', $email, 'Invitation to AKRA TELEHEALTH', $data['email'], Session::get('practice_id'));
+                    $email['message_data'] = 'You are invited to use the Mobihealth International for ' . $practice->practice_name . '.<br>Go to ' . $url . ' to get registered.';
+                    $this->send_mail('auth.emails.generic', $email, 'Invitation to Mobihealth International', $data['email'], Session::get('practice_id'));
                 }
                 $data['displayname'] = $data['firstname'] . " " . $data['lastname'];
                 if ($data['title'] !== ''){
@@ -1578,7 +1578,7 @@ class CoreController extends Controller
 
     public function dashboard(Request $request)
     {
-        $data['title'] = 'AKRA TELEHEALTH';
+        $data['title'] = 'Mobihealth International';
         $user_id = Session::get('user_id');
         if (Session::get('group_id') == '100') {
             $row = DB::table('demographics_relate')->where('id', '=', $user_id)->first();
@@ -5146,7 +5146,7 @@ class CoreController extends Controller
         $data2['message_data'] = 'This message is to notify you that you have reset your password with mdNOSH Gateway.<br>';
         $data2['message_data'] .= 'To finish this process, please click on the following link or point your web browser to:<br>';
         $data2['message_data'] .= $url;
-        $this->send_mail('auth.emails.generic', $data2, 'Reset password to AKRA TELEHEALTH', $query->email, $query->practice_id);
+        $this->send_mail('auth.emails.generic', $data2, 'Reset password to Mobihealth International', $query->email, $query->practice_id);
         Session::put('message_action', 'Password reset.  Check your email for further instructions');
         return redirect(Session::get('last_page'));
     }
@@ -5636,7 +5636,7 @@ class CoreController extends Controller
             Session::put('provider_id', $provider_id);
         }
         // Just show provider selector
-        $data['title'] = 'AKRA TELEHEALTH';
+        $data['title'] = 'Mobihealth International';
         if (Session::has('pid')) {
             $data = array_merge($data, $this->sidebar_build('chart'));
         }

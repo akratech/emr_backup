@@ -14,20 +14,6 @@
         @endif
     </title>
     {!! Minify::stylesheet($assets_css)->withFullUrl() !!}
-
-    {{--<link href="{{ asset('assets/css/font-awesome.min.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/toastr.min.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/nosh-timeline.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/bootstrap-select.min.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/bootstrap-tagsinput.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/bootstrap-datetimepicker.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/fullcalendar.min.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/fileinput.min.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/jquery.realperson.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/jquery.signaturepad.css') }}" rel="stylesheet">--}}
-    {{--<link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">--}}
-
     @yield('view.stylesheet')
 
 </head>
@@ -597,43 +583,6 @@
     </div>
     @endif
     {!! Minify::javascript($assets_js)->withFullUrl() !!}
-
-    {{--<script src="{{asset('assets/js/jquery-3.1.1.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bootstrap.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/moment.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery.maskedinput.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/toastr.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bootstrap3-typeahead.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery.cookie.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bootstrap-list-filter.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery-idleTimeout.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bootstrap-tagsinput.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery.selectboxes.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bootstrap-select.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery.fileDownload.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jstz-1.0.4.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/bluebutton.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/pediatric-immunizations.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/fullcalendar.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/canvas-to-blob.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/sortable.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/purify.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/fileinput.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/pdfobject.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jcanvas.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery.realperson.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/sigma.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.layout.forceAtlas2.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.layout.noverlap.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.parsers.json.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.plugins.dragNodes.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.renderers.customEdgeShapes.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.renderers.edgeDots.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.renderers.edgeLabels.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/plugins/sigma.renderers.parallelEdges.min.js')}}"></script>--}}
-    {{--<script src="{{asset('assets/js/jquery.signaturepad.min.js')}}"></script>--}}
-
     <!-- JavaScripts -->
     <script type="text/javascript">
         // Global variables
