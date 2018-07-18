@@ -95,13 +95,13 @@
                         @endif
                         @if (Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4')
                             <li><a href="{{ route('financial', ['queue']) }}">{{ trans('nosh.financial') }}</a></li>
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ trans('nosh.office') }} <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu" style="width:250px;">
-                                    <li><a href="{{ route('vaccines', ['inventory']) }}">{{ trans('nosh.vaccines') }}</a></li>
-                                    <li><a href="{{ route('supplements', ['inventory']) }}">{{ trans('nosh.supplements') }}</a></li>
-                                    <li><a href="{{ route('superquery_list') }}">{{ trans('nosh.reports') }}</a></li>
-                                </ul>
-                            </li>
+                            {{--<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ trans('nosh.office') }} <span class="caret"></span></a>--}}
+                                {{--<ul class="dropdown-menu" role="menu" style="width:250px;">--}}
+                                    {{--<li><a href="{{ route('vaccines', ['inventory']) }}">{{ trans('nosh.vaccines') }}</a></li>--}}
+                                    {{--<li><a href="{{ route('supplements', ['inventory']) }}">{{ trans('nosh.supplements') }}</a></li>--}}
+                                    {{--<li><a href="{{ route('superquery_list') }}">{{ trans('nosh.reports') }}</a></li>--}}
+                                {{--</ul>--}}
+                            {{--</li>--}}
                             @if (Session::has('print_queue') || Session::has('fax_queue'))
                                 <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ trans('nosh.queues') }} <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu" style="width:250px;">

@@ -3188,7 +3188,7 @@ class CoreController extends Controller
             'queue' => ['Bills to Submit', 'fa-list'],
             'processed' => ['Processed Bills', 'fa-check'],
             'outstanding' => ['Outstanding Balances', 'fa-exclamation'],
-            'era' => ['ERA 835', 'fa-refresh'],
+//            'era' => ['ERA 835', 'fa-refresh'],
             'monthly_report' => ['Monthly Financial Report', 'fa-table'],
             'yearly_report' => ['Yearly Financial Report', 'fa-table'],
             'query_payment' => ['Custom Report by Payment Type', 'fa-question'],
