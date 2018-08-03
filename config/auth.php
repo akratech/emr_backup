@@ -45,6 +45,10 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+        'mobileapi' => [
+            'driver' => 'token',
+            'provider' => 'users',
+        ],
     ],
 
     /*
