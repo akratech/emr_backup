@@ -158,20 +158,17 @@ class UserController extends Controller
             $query = DB::table('schedule')->where('provider_id', '=', $request->get('provider_id'))
                 ->where('pid', '=', $request->get('pid'))
                 ->whereBetween('start', array($start_time, $end_time))
-                ->get();
-
-            $data = array();
+                ->get();            
 
             if ($query->count() > 0) {
-                foreach ($query as $row) {
-                    $key = $row->visit_type . ',' . $row->appt_id;
-                    $value = date('Y-m-d H:i:s A', $row->start) . ' (Appt ID: ' . $row->appt_id . ')';
-                    $data[$key] = $value;
+                foreach ($query as $row) {                    
+                    $row->start = date('Y-m-d H:i:s A', $row->start);
+                    $row->end = date('Y-m-d H:i:s A', $row->end);
                 }
 
                 $return['status'] = 1;
                 $return['message'] = 'Appointment get Successfully ';
-                $return['data'] = $data;
+                $return['data'] = $query;
 
             } else {
                 $return['message'] = 'No any Appointment';
