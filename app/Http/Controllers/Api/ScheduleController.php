@@ -513,7 +513,9 @@ class ScheduleController extends Controller
 	            if($schedule->delete()) {
 	            	$this->audit('Delete');
 	            	$return['status'] = 1;
-	        		$return['message'] ='Schedule deleted';
+	        		$return['message'] ='Schedule successfully deleted';
+	        	} else {
+	        		$return['message'] ='Schedule not available';
 	        	}
 	        } else {
 	            $rid = str_replace('R', '', $id);
@@ -521,7 +523,9 @@ class ScheduleController extends Controller
 	            if($schedule->delete()) {
 	            	$this->audit('Delete');
 	            	$return['status'] = 1;
-	        		$return['message'] ='Schedule deleted';
+	        		$return['message'] ='Schedule successfully deleted';
+	        	} else {
+	        		$return['message'] ='Schedule not available';
 	        	}
 	        }
     	}       
