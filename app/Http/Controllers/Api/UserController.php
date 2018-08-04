@@ -123,7 +123,7 @@ class UserController extends Controller
             }
 
         }
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
     }
 
     public function getProviders(Request $request) {
