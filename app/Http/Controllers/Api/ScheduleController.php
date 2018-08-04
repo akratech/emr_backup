@@ -22,7 +22,7 @@ class ScheduleController extends Controller
 {
 	public function __construct()
 	{
-		/*$this->middleware('auth');*/
+		/* $this->middleware('auth'); */
 	}
 
 	public function providerSchedules(Request $request) {
@@ -352,11 +352,12 @@ class ScheduleController extends Controller
             return response()->json($return,200,[],JSON_FORCE_OBJECT);                
         }
 
+
         if ($request->get('group_id') == '100') {        	
             $pid = $request->get('pid');
             $row1 = DB::table('demographics')->where('pid', '=', $pid)->first();
             $title = $row1->lastname . ', ' . $row1->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row1->DOB)) . ') (ID: ' . $pid . ')';
-        } else {        	
+        } else {    
             $pid = $request->get('pid');
             if ($pid == '' || $pid == '0') {
                 $title = $request->get('reason');
@@ -384,9 +385,9 @@ class ScheduleController extends Controller
         $reason = $request->get('reason');
         $id = $request->get('event_id');
         $repeat = $request->get('repeat');
-        if ($id == '') {
+        if ($id == '') {        	
 
-            if ($request->get('group_id') == '100') {
+            if ($request->get('group_id') == '100') {            	
                 $status = 'Pending';
             } else {
                 if ($pid == '' || $pid == '0') {
@@ -397,9 +398,10 @@ class ScheduleController extends Controller
             }
         } else {
             $status = $request->get('status');
-        }
+        }        
 
         if ($repeat != '') {
+
             $repeat_day1 = date('l', $start);
             $repeat_day = strtolower($repeat_day1);
             $repeat_start_time = date('h:ia', $start);
@@ -423,8 +425,8 @@ class ScheduleController extends Controller
             if ($id == '') {
                 DB::table('repeat_schedule')->insert($data1);
                 $this->audit('Add');
-                $data['status'] = 1;
-                $data['message'] = 'Repeated event added.';
+                $return['status'] = 1;
+                $return['message'] = 'Repeated event added.';
             } else {
                 $id_check = strpbrk($id, 'N');
                 if ($id_check == TRUE) {
@@ -433,17 +435,20 @@ class ScheduleController extends Controller
                     $this->audit('Add');
                     DB::table('schedule')->where('appt_id', '=', $nid)->delete();
                     $this->audit('Delete');
-                    $data['status'] = 1;
-                    $data['message'] = 'Repeated event updated.';
+                    $return['status'] = 1;
+                    $return['message'] = 'Repeated event updated.';
                 } else {
                     $rid = str_replace('R', '', $id);
                     DB::table('repeat_schedule')->where('repeat_id', '=', $rid)->update($data1);
                     $this->audit('Update');
-                    $data['status'] = 1;
-                    $data['message'] = 'Repeated event updated.';
+                    $return['status'] = 1;
+                    $return['message'] = 'Repeated event updated.';
                 }
             }
+
+            $return['data'] = $data1;
         } else {
+
             $data = [
                 'pid' => $pid,
                 'start' => $start,
@@ -455,19 +460,23 @@ class ScheduleController extends Controller
                 'provider_id' => $provider_id,
                 'user_id' => $request->get('user_id')
             ];
+
             if ($request->get('group_id') != '100') {
                 $data['notes'] = $request->get('notes');
             }
+
             if ($id == '') {
+
                 $data['timestamp'] = null;
                 $appt_id = DB::table('schedule')->insertGetId($data);
                 $this->audit('Add');
 
-                if ($pid != '0' && $pid !== '') {
-                    $this->schedule_notification($appt_id);
-                }
-                $data['status'] = 1;
-                $data['message'] = 'Appointment/Event added.';
+                if ($pid != '0' && $pid !== '') {                	
+                    /*$this->schedule_notification($appt_id);*/                    
+                }                       
+                $return['status'] = 1;
+                $return['message'] = 'Appointment/Event added.';
+               
             } else {
                 $id_check1 = strpbrk($id, 'NR');
                 if ($id_check1 == TRUE) {
@@ -476,8 +485,8 @@ class ScheduleController extends Controller
                     $this->audit('Add');
                     DB::table('repeat_schedule')->where('repeat_id', '=', $nid1)->delete();
                     $this->audit('Delete');
-                    $data['status'] = 1;
-                    $data['message'] = 'Event updated.';
+                    $return['status'] = 1;
+                    $return['message'] = 'Event updated.';
                 } else {
                     $notify = DB::table('schedule')->where('appt_id', '=', $id)->first();
                     if($notify) {
@@ -485,17 +494,19 @@ class ScheduleController extends Controller
 	                    $this->audit('Update');
 	                    if ($notify->start != $start && $notify->end != $end) {
 	                        if ($pid != '0' && $pid !== '') {
-	                            $this->schedule_notification($id);
+	                        	/*$this->schedule_notification($id);*/	                            
 	                        }
 	                    }
-	                    $data['status'] = 1;
-	                    $data['message'] = 'Appointment updated.';
+	                    $return['status'] = 1;
+	                    $return['message'] = 'Appointment updated.';
 	                }
                 }
             }
+
+            $return['data'] = $data;
         }
+
         
-        $return['data'] = $data;
 
         return  Response::json($return,200,[],JSON_FORCE_OBJECT);
     }
@@ -532,5 +543,31 @@ class ScheduleController extends Controller
 
         return  Response::json($return,200,[],JSON_FORCE_OBJECT);
 	}
+
+	protected function scheduleNotification($appt_id,$practice_id)
+    {
+    	$appt = DB::table('schedule')->where('appt_id', '=', $appt_id)->first();
+        if ($appt->pid !== '0') {
+            $patient = DB::table('demographics')->where('pid', '=', $appt->pid)->first();
+            $practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+            $user = DB::table('users')->where('id', '=', $appt->provider_id)->first();
+            if ($appt->start > time()) {
+                if ($patient->reminder_to !== '') {
+                    $data_message['startdate'] = date("F j, Y, g:i a", $appt->start);
+                    $data_message['startdate1'] = date("Y-m-d, g:i a", $appt->start);
+                    $data_message['displayname'] = $user->displayname;
+                    $data_message['phone'] = $practice->phone;
+                    $data_message['email'] = $practice->email;
+                    $data_message['additional_message'] = $practice->additional_message;
+                    if ($patient->reminder_method == 'Cellular Phone') {
+                        $message = view('emails.remindertext', $data_message)->render();
+                        $this->textbelt($patient->reminder_to, $message, $practice_id);
+                    } else {
+                        $this->send_mail('emails.reminder', $data_message, 'Appointment Reminder', $patient->reminder_to, $practice_id);
+                    }
+                }
+            }
+        }
+    }
 
 }

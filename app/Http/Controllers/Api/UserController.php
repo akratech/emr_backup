@@ -109,8 +109,7 @@ class UserController extends Controller
                     $query_array1->where('demographics.lastname', 'LIKE', "%$keywords%")
                     ->orWhere('demographics.firstname', 'LIKE', "%$keywords%")
                     ->orWhere('demographics.pid', 'LIKE', "%$keywords%");
-                })
-            ->get();
+                })->get();
 
             if ($patients->count() > 0) {                
 
