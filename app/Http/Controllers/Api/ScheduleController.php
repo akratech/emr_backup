@@ -449,7 +449,8 @@ class ScheduleController extends Controller
             $return['data'] = $data1;
         } else {
 
-            $data = [
+            $data = [            
+            	'appt_id' => $id,
                 'pid' => $pid,
                 'start' => $start,
                 'end' => $end,
@@ -467,13 +468,13 @@ class ScheduleController extends Controller
 
             if ($id == '') {
 
-                $data['timestamp'] = null;
                 $appt_id = DB::table('schedule')->insertGetId($data);
                 $this->audit('Add');
 
                 if ($pid != '0' && $pid !== '') {                	
                     /*$this->schedule_notification($appt_id);*/                    
-                }                       
+                }               
+                $data['appt_id'] = $appt_id;                                
                 $return['status'] = 1;
                 $return['message'] = 'Appointment/Event added.';
                
