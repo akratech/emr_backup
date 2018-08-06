@@ -19,9 +19,8 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->guest() && $guard == "api") {
-            
-            $response = ['status' => '0', "status_code" => 101, 'message' => 'Invalid token.'];
+        if (!Auth::guard($guard)->check() && $guard == "api") {
+            $response = ['status' => '0', "status_code" => 101, 'message' => 'Invalid token. Please try login again.'];
             return Response::json($response,200,[],JSON_FORCE_OBJECT);
 
         } else {

@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'fhir' => \App\Http\Middleware\Fhir::class,
         'checkinstall' => \App\Http\Middleware\CheckInstall::class,
         'postauth' => \App\Http\Middleware\PostAuth::class,
+        'auth:api' => \App\Http\Middleware\AuthenticateMobileApi::class,
         'api' => \App\Http\Middleware\AuthenticateMobileApi::class,
     ];
 }

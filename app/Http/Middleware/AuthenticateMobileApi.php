@@ -20,7 +20,7 @@ class AuthenticateMobileApi
      */
     public function handle($request, Closure $next, $guard = "api") {
         if (!Auth::guard($guard)->check()) {
-            $response = ['status' => '0', "status_code" => 101, 'message' => 'Invalid token.'];
+            $response = ['status' => '0', "status_code" => 101, 'message' => 'Invalid AuthenticateMobileApi'];
             return Response::json($response,200,[],JSON_FORCE_OBJECT);
         }
                 

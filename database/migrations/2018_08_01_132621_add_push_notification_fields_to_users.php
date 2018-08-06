@@ -14,7 +14,7 @@ class AddPushNotificationFieldsToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {            
-            $table->string('app_api_token', 255)->after('reports')->nullable();
+            $table->string('api_token', 255)->after('reports')->nullable();
             $table->tinyInteger('device_platform')->after('app_api_token')->comment('0=>android, 1=>ios')->nullable();
             $table->string('android_push_ids', 255)->after('device_platform')->nullable();
             $table->string('ios_push_ids', 255)->after('android_push_ids')->nullable();
@@ -29,7 +29,7 @@ class AddPushNotificationFieldsToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('app_api_token');
+            $table->dropColumn('api_token');
             $table->dropColumn('device_platform');
             $table->dropColumn('android_push_ids');
             $table->dropColumn('ios_push_ids');

@@ -27,13 +27,14 @@ class ScheduleController extends Controller
 
 	public function providerSchedules(Request $request) {
 
+		$user = Auth::guard('api')->user();
+
 		$return = array('status' => 0, 'message' => '', 'data' => array());
 
 		$validator = Validator::make($request->all(), [
             'start_date' => 'required',
             'end_end' => 'required',
             'provider_id' => 'required',
-            'practice_id' => 'required',
         ]);
 
         if ($validator->fails()) {         
@@ -56,7 +57,7 @@ class ScheduleController extends Controller
 					$row1 = DB::table('calendar')
 					->select('classname')
 					->where('visit_type', '=', $row->visit_type)
-					->where('practice_id', '=', $request->get('practice_id'))
+					->where('practice_id', '=', $user->practice_id)
 					->first();
 					$classname = $row1->classname;
 				} else {
@@ -85,7 +86,7 @@ class ScheduleController extends Controller
 					'pid'=> $pid,
 					'timestamp' => $timestamp
 				];
-				if ($request->get('group_id') == '100' || $request->get('group_id') == 'schedule') {
+				if ($user->group_id == '100' || $user->group_id == 'schedule') {
 					if ($request->get('pid') != $pid) {
 						$event['title'] = 'Appointment taken';
 						$event['reason'] = 'Private';
@@ -104,7 +105,7 @@ class ScheduleController extends Controller
 					$event['reason'] = $row->reason;
 					$event['status'] = $row->status;
 					$event['notes'] = $row->notes;
-					if ($request->get('group_id') == '1') {
+					if ($user->group_id == '1') {
 						$event['editable'] = false;
 					} else {
 						$event['editable'] = true;
@@ -158,14 +159,14 @@ class ScheduleController extends Controller
 								'status' => 'Repeated Event',
 								'notes' => ''
 							);
-							if ($request->get('group_id') == '100') {
+							if ($user->group_id == '100') {
 								$event1['title'] = 'Provider Not Available';
 								$event1['reason'] = 'Provider Not Available';
 								$event1['editable'] = false;
 							} else {
 								$event1['title'] = $row2->title;
 								$event1['reason'] = $row2->reason;
-								if ($request->get('group_id') == '1') {
+								if ($user->group_id == '1') {
 									$event1['editable'] = false;
 								} else {
 									$event1['editable'] = true;
@@ -198,14 +199,14 @@ class ScheduleController extends Controller
 									'status' => 'Repeated Event',
 									'notes' => ''
 								);
-								if ($request->get('group_id') == '100') {
+								if ($user->group_id == '100') {
 									$event1['title'] = 'Provider Not Available';
 									$event1['reason'] = 'Provider Not Available';
 									$event1['editable'] = false;
 								} else {
 									$event1['title'] = $row2->title;
 									$event1['reason'] = $row2->reason;
-									if ($request->get('group_id') == '1') {
+									if ($user->group_id == '1') {
 										$event1['editable'] = false;
 									} else {
 										$event1['editable'] = true;
@@ -221,7 +222,7 @@ class ScheduleController extends Controller
 			}
 		}
 
-		$row3 = DB::table('practiceinfo')->where('practice_id', '=', $request->get('practice_id'))->first();
+		$row3 = DB::table('practiceinfo')->where('practice_id', '=', $user->practice_id)->first();
 
 		if($row3) {		
 
@@ -332,13 +333,12 @@ class ScheduleController extends Controller
 
 	public function updateSchedule(Request $request) {
 
+		$user = Auth::guard('api')->user();
+
 		$return = array('status' => 0, 'message' => '', 'data' => array());
 
-		$validator = Validator::make($request->all(), [
-			'group_id' => 'required',
+		$validator = Validator::make($request->all(), [			
 			'provider_id' => 'required',
-            'practice_id' => 'required',
-            'user_id' => 'required',
 			'reason' => 'required',	
 			'title' => 'required',						
 			'start_date' => 'required',
@@ -353,7 +353,7 @@ class ScheduleController extends Controller
         }
 
 
-        if ($request->get('group_id') == '100') {        	
+        if ($user->group_id == '100') {        	
             $pid = $request->get('pid');
             $row1 = DB::table('demographics')->where('pid', '=', $pid)->first();
             $title = $row1->lastname . ', ' . $row1->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row1->DOB)) . ') (ID: ' . $pid . ')';
@@ -376,7 +376,7 @@ class ScheduleController extends Controller
                 ->select('duration')
                 ->where('visit_type', '=', $visit_type)
                 ->where('active', '=', 'y')
-                ->where('practice_id', '=', $request->get('practice_id'))
+                ->where('practice_id', '=', $user->practice_id)
                 ->first();                
             $end = $start + $row->duration;
         }
@@ -385,9 +385,9 @@ class ScheduleController extends Controller
         $reason = $request->get('reason');
         $id = $request->get('event_id');
         $repeat = $request->get('repeat');
-        if ($id == '') {        	
 
-            if ($request->get('group_id') == '100') {            	
+        if ($id == '') {        	
+            if ($user->group_id == '100') {            	
                 $status = 'Pending';
             } else {
                 if ($pid == '' || $pid == '0') {
@@ -458,10 +458,10 @@ class ScheduleController extends Controller
                 'reason' => $reason,
                 'status' => $status,
                 'provider_id' => $provider_id,
-                'user_id' => $request->get('user_id')
+                'user_id' => $user->id,
             ];
 
-            if ($request->get('group_id') != '100') {
+            if ($user->group_id != '100') {
                 $data['notes'] = $request->get('notes');
             }
 
@@ -515,12 +515,12 @@ class ScheduleController extends Controller
 
     	$return = array('status' => 0, 'message' => 'Schedule Could not deleted', 'data' => array());	
 
-    	if($request->has('schedule_id') && $request->get('schedule_id') != '') {
+    	if($request->has('$') && $request->get('schedule_id') != '') {
 
-    		$id = $request->get('schedule_id');
-	        $id_check = strpbrk($id, 'R');
+    		$schedule_id = $request->get('schedule_id');
+	        $id_check = strpbrk($schedule_id, 'R');
 	        if ($id_check == false) {
-	            $schedule = DB::table('schedule')->where('appt_id', '=', $id);
+	            $schedule = DB::table('schedule')->where('appt_id', '=', $schedule_id);
 	            if($schedule->delete()) {
 	            	$this->audit('Delete');
 	            	$return['status'] = 1;
@@ -529,7 +529,7 @@ class ScheduleController extends Controller
 	        		$return['message'] ='Schedule not available';
 	        	}
 	        } else {
-	            $rid = str_replace('R', '', $id);
+	            $rid = str_replace('R', '', $schedule_id);
 	            $schedule = DB::table('repeat_schedule')->where('repeat_id', '=', $rid);	            
 	            if($schedule->delete()) {
 	            	$this->audit('Delete');
@@ -542,32 +542,6 @@ class ScheduleController extends Controller
     	}       
 
         return  Response::json($return,200,[],JSON_FORCE_OBJECT);
-	}
-
-	protected function scheduleNotification($appt_id,$practice_id)
-    {
-    	$appt = DB::table('schedule')->where('appt_id', '=', $appt_id)->first();
-        if ($appt->pid !== '0') {
-            $patient = DB::table('demographics')->where('pid', '=', $appt->pid)->first();
-            $practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
-            $user = DB::table('users')->where('id', '=', $appt->provider_id)->first();
-            if ($appt->start > time()) {
-                if ($patient->reminder_to !== '') {
-                    $data_message['startdate'] = date("F j, Y, g:i a", $appt->start);
-                    $data_message['startdate1'] = date("Y-m-d, g:i a", $appt->start);
-                    $data_message['displayname'] = $user->displayname;
-                    $data_message['phone'] = $practice->phone;
-                    $data_message['email'] = $practice->email;
-                    $data_message['additional_message'] = $practice->additional_message;
-                    if ($patient->reminder_method == 'Cellular Phone') {
-                        $message = view('emails.remindertext', $data_message)->render();
-                        $this->textbelt($patient->reminder_to, $message, $practice_id);
-                    } else {
-                        $this->send_mail('emails.reminder', $data_message, 'Appointment Reminder', $patient->reminder_to, $practice_id);
-                    }
-                }
-            }
-        }
-    }
+	}	
 
 }

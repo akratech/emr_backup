@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\User;
+
 
 use Validator;
 use DB;
@@ -19,41 +21,37 @@ use Hash;
 //use Auth;
 
 
-class UserController extends Controller
-{
+class UserController extends Controller {
 
-    /*protected function guard()
-    {
-       return Auth::guard('api');
-    }*/
-    
+    use AuthenticatesUsers;
+
     public function login(Request $request){
 
         $return = array('status' => 0, 'message' => '', 'data' => array());
         $credentials = [
             "username" => $request->get('username'),
-            "password" => $request->get('password'),
-            "active" => '1',
-            "group_id" => $request->get('group')
+            "password" => $request->get('password'),            
+            "group_id" => $request->get('group'),
+            "active" => '1'
         ];        
-        if (Auth::guard('web')->attempt($credentials)) {
-            $user = Auth::guard('web')->user();
-            /*$user->app_api_token = Hash::make(time());*/
-            $user->token = Hash::make(time());
+        if ($this->guard('api')->attempt($credentials)) {
+
+            $user = $this->guard('api')->user();
+
+            $user->api_token = $user->token = Hash::make(time());
             $user->device_platform = $request->has('device_platform') ? $request->get('device_platform') : '';
             $user->android_push_ids = $request->has('android_push_ids') ? $request->get('android_push_ids') : '';
             $user->ios_push_ids = $request->has('ios_push_ids') ? $request->get('ios_push_ids') : '';
-            $user->save();            
-
+            $user->save();
 
             $patient = DB::table('demographics')
-                ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-                ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
-                ->where('demographics_relate.practice_id', '=', $user->practice_id)
-                ->where(function($query_array1) use ($user) {
-                    $query_array1->where('demographics.firstname', '=',  $user->firstname)
-                    ->orWhere('demographics.lastname', '=', $user->lastname);
-                })
+            ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+            ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
+            ->where('demographics_relate.practice_id', '=', $user->practice_id)
+            ->where(function($query_array1) use ($user) {
+                $query_array1->where('demographics.firstname', '=',  $user->firstname)
+                ->orWhere('demographics.lastname', '=', $user->lastname);
+            })
             ->first();
 
             $ma_user['id'] = $user['id'];
@@ -63,55 +61,70 @@ class UserController extends Controller
             $ma_user['firstname'] = $user['firstname'];
             $ma_user['middle'] = $user['middle'];
             $ma_user['title'] = $user['title'];
-            $ma_user['group'] = $user['group'] == 2 ? 'Doctor' : 'Patient';
             $ma_user['group_id'] = $user['group_id'];
-            $ma_user['token'] = $user['token'];
+            $ma_user['group'] = $user['group'] == 2 ? 'Doctor' : 'Patient';            
+            $ma_user['api_token'] = $user['api_token'];
             $ma_user['practice_id'] = $user['practice_id'];
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
-            $ma_user['uid'] = $user['uid'];
-            $return['data']['user'] = $ma_user;
+            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';;
+
             $return['status'] = 1;
             $return['message'] = 'Login Successfully.';
+            $return['data']['user'] = $ma_user;
+            
         }
         else{
             $return['message'] = 'Invalid username or password.';
         }
         return  Response::json($return,200,[],JSON_FORCE_OBJECT);
     }
-    
+
     public function logout(Request $request) {
-        $user = Auth::guard('web')->user();
-        $return = array('status' => 0, 'message' => '', 'data' => array());        
+        /*
+        Auth::guard('api')->user(); // instance of the logged user
+        Auth::guard('api')->check(); // if a user is authenticated
+        Auth::guard('api')->id(); // the id of the authenticated user
+        */
+
+        $return = array('status' => 0, 'message' => 'Already logged out.', 'data' => array());
+
+        $user = Auth::guard('api')->user();        
         if ($user) {
             $user->token = null;
-            $user->save();
-            $return['status'] = 1;            
+            $user->api_token = null;
+            $user->save();        
+
+            $return['status'] = 1;
             $return['message'] = 'Successfully Logout.';
-        } else {
-            $return['message'] = 'Could not logout';
-        }
+        }        
         return  Response::json($return,200,[],JSON_FORCE_OBJECT);
     }
 
     public function searchPatient(Request $request) {
 
+        $user = Auth::guard('api')->user();
+
         $return = array('status' => 0, 'message' => '', 'data' => array());
 
-        if($request->has('patient_keywords') && $request->get('patient_keywords') != "" && $request->has('practice_id') && $request->get('practice_id') != "") {
+        if($request->has('patient_keywords') && $request->get('patient_keywords') != "") {
 
             $keywords = $request->get('patient_keywords');
 
             $patients = DB::table('demographics')
-                ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-                ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
-                ->where('demographics_relate.practice_id', '=', $request->get('practice_id'))
-                ->where(function($query_array1) use ($keywords) {
-                    $query_array1->where('demographics.lastname', 'LIKE', "%$keywords%")
-                    ->orWhere('demographics.firstname', 'LIKE', "%$keywords%")
-                    ->orWhere('demographics.pid', 'LIKE', "%$keywords%");
-                })->get();
+            ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+            ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
+            ->where('demographics_relate.practice_id', '=', $user->practice_id)
+            ->where(function($query_array1) use ($keywords) {
+                $query_array1->where('demographics.lastname', 'LIKE', "%$keywords%")
+                ->orWhere('demographics.firstname', 'LIKE', "%$keywords%")
+                ->orWhere('demographics.pid', 'LIKE', "%$keywords%");
+            })->get();
 
             if ($patients->count() > 0) {                
+
+                foreach($patients as $patient) {
+                    $patient->title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d/m/Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
+                }
 
                 $return['status'] = 1;            
                 $return['message'] = 'Patients list get successfully';
@@ -130,10 +143,10 @@ class UserController extends Controller
         $return = array('status' => 0, 'message' => '', 'data' => array());
 
         $providers = DB::table('users')            
-            ->select('id', 'username', 'email', 'displayname' ,'firstname', 'lastname')
-            ->where('group_id', '=', 2)->where('active', '=', 1)->get();
+        ->select('id', 'username', 'email', 'displayname' ,'firstname', 'lastname')
+        ->where('group_id', '=', 2)->where('active', '=', 1)->get();
 
-        if ($providers->count() > 0) {                
+        if ($providers->count() > 0) {
 
             $return['status'] = 1;            
             $return['message'] = 'Providers list get successfully';
@@ -147,6 +160,7 @@ class UserController extends Controller
 
     public function getAppointments(Request $request)
     {
+
         $return = array('status' => 0, 'message' => '', 'data' => array());
 
         if($request->has('provider_id') && $request->get('provider_id') != '' && $request->has('pid') &&  $request->get('pid') != '') {
@@ -155,9 +169,9 @@ class UserController extends Controller
             $end_time = time() + 1204800;
 
             $query = DB::table('schedule')->where('provider_id', '=', $request->get('provider_id'))
-                ->where('pid', '=', $request->get('pid'))
-                ->whereBetween('start', array($start_time, $end_time))
-                ->get();            
+            ->where('pid', '=', $request->get('pid'))
+            ->whereBetween('start', array($start_time, $end_time))
+            ->get();            
 
             if ($query->count() > 0) {
                 foreach ($query as $row) {                    
@@ -172,11 +186,11 @@ class UserController extends Controller
             } else {
                 $return['message'] = 'No any Appointment';
             }
-            
+
         } else {
             $return['message'] = 'Invalid Provider';
         }
         return  Response::json($return,200,[],JSON_FORCE_OBJECT);
-        
+
     }
 }
