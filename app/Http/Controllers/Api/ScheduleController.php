@@ -42,7 +42,7 @@ class ScheduleController extends Controller
         	$return['message'] = 'Validation Error Occurred';
         	$return['error'] = $validator;
 
-            return response()->json($return,200,[],JSON_FORCE_OBJECT);                
+            return response()->json($return);
         }        
 
 		$start = strtotime($request->get('start_date'));
@@ -328,7 +328,7 @@ class ScheduleController extends Controller
 			$return['message'] = 'No any schedule fixed';
 		}
 
-		return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+		return  Response::json($return);
 	}
 
 	public function updateSchedule(Request $request) {
@@ -349,7 +349,7 @@ class ScheduleController extends Controller
         if ($validator->fails()) {
         	$return['message'] = 'Validation Error Occurred';
         	$return['error'] = $validator;
-            return response()->json($return,200,[],JSON_FORCE_OBJECT);                
+            return response()->json($return);                
         }
 
 
@@ -509,7 +509,7 @@ class ScheduleController extends Controller
 
         
 
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
     }
 
     public function deleteSchedule(Request $request) {
@@ -542,7 +542,7 @@ class ScheduleController extends Controller
 	        }
     	}       
 
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
 	}	
 
 }

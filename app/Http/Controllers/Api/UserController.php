@@ -37,6 +37,7 @@ class UserController extends Controller {
         if ($this->guard('api')->attempt($credentials)) {
 
             $user = $this->guard('api')->user();
+            $group_id = $request->get('group');
 
             $user->api_token = $user->token = Hash::make(time());
             $user->device_platform = $request->has('device_platform') ? $request->get('device_platform') : '';
@@ -67,6 +68,29 @@ class UserController extends Controller {
             $ma_user['practice_id'] = $user['practice_id'];
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
             $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';;
+            if($group_id == 2){
+                $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
+                $practiceinfo = json_decode(json_encode($practiceinfo), true);
+                $ma_user['practiceinfo']["sun_o"] = $practiceinfo['sun_o'];
+                $ma_user['practiceinfo']["sun_c"] = $practiceinfo['sun_c'];
+                $ma_user['practiceinfo']["mon_o"] = $practiceinfo['mon_o'];
+                $ma_user['practiceinfo']["mon_c"] = $practiceinfo['mon_c'];
+                $ma_user['practiceinfo']["tue_o"] = $practiceinfo['tue_o'];
+                $ma_user['practiceinfo']["tue_c"] = $practiceinfo['tue_c'];
+                $ma_user['practiceinfo']["wed_o"] = $practiceinfo['wed_o'];
+                $ma_user['practiceinfo']["wed_c"] = $practiceinfo['wed_c'];
+                $ma_user['practiceinfo']["thu_o"] = $practiceinfo['thu_o'];
+                $ma_user['practiceinfo']["thu_c"] = $practiceinfo['thu_c'];
+                $ma_user['practiceinfo']["fri_o"] = $practiceinfo['fri_o'];
+                $ma_user['practiceinfo']["fri_c"] = $practiceinfo['fri_c'];
+                $ma_user['practiceinfo']["sat_o"] = $practiceinfo['sat_o'];
+                $ma_user['practiceinfo']["sat_c"] = $practiceinfo['sat_c'];
+                $ma_user['practiceinfo']["minTime"] = $practiceinfo['minTime'];
+                $ma_user['practiceinfo']["maxTime"] = $practiceinfo['maxTime'];
+                $ma_user['practiceinfo']["weekends"] = $practiceinfo['weekends'];
+                $ma_user['practiceinfo']["timezone"] = $practiceinfo['timezone'];
+                
+            }
 
             $return['status'] = 1;
             $return['message'] = 'Login Successfully.';
@@ -76,7 +100,7 @@ class UserController extends Controller {
         else{
             $return['message'] = 'Invalid username or password.';
         }
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
     }
 
     public function logout(Request $request) {
@@ -97,7 +121,7 @@ class UserController extends Controller {
             $return['status'] = 1;
             $return['message'] = 'Successfully Logout.';
         }        
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
     }
 
     public function searchPatient(Request $request) {
@@ -155,7 +179,7 @@ class UserController extends Controller {
         } else {
             $return['message'] = 'Providers not found';
         }
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
     }
 
     public function getAppointments(Request $request)
@@ -190,7 +214,7 @@ class UserController extends Controller {
         } else {
             $return['message'] = 'Invalid Provider';
         }
-        return  Response::json($return,200,[],JSON_FORCE_OBJECT);
+        return  Response::json($return);
 
     }
 }
