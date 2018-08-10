@@ -65,15 +65,20 @@ class ScheduleController extends Controller
 				}
 				if ($row->pid == '0') {
 					$pid = '';
+					$patients_info = '';
 				} else {
 					$pid = $row->pid;
+					$patients_info = DB::table('demographics')
+		            ->select('pid', 'firstname', 'lastname', 'middle', 'title', 'sex', 'DOB', 'email', 'address', 'city', 'state', 'zip', 'active','photo')
+		            ->where('pid', $pid)->first();
 				}
 				if ($row->timestamp == '0000-00-00 00:00:00' || $row->user_id == '') {
 					$timestamp = '';
 				} else {
 					$user_row = DB::table('users')->where('id', '=', $row->user_id)->first();
 					$timestamp = 'Appointment added by ' . $user_row->displayname . ' on ' . $row->timestamp;
-				}
+				}				 
+
 				$row_start = date('c', $row->start);
 				$row_end = date('c', $row->end);
 				$event = [
@@ -120,6 +125,9 @@ class ScheduleController extends Controller
 						$event['borderColor'] = 'red';
 					}
 				}
+
+				$event['patients_info'] = $patients_info;
+
 				$events[] = $event;
 			}
 		}
