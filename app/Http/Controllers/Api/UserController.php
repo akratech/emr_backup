@@ -70,6 +70,7 @@ class UserController extends Controller {
             $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';;
             if($group_id == 2){
                 $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
+                $providers = DB::table('providers')->where('id', '=', $user['id'])->first();
                 $practiceinfo = json_decode(json_encode($practiceinfo), true);
                 $ma_user['practiceinfo']["sun_o"] = $practiceinfo['sun_o'];
                 $ma_user['practiceinfo']["sun_c"] = $practiceinfo['sun_c'];
@@ -89,6 +90,18 @@ class UserController extends Controller {
                 $ma_user['practiceinfo']["maxTime"] = $practiceinfo['maxTime'];
                 $ma_user['practiceinfo']["weekends"] = $practiceinfo['weekends'];
                 $ma_user['practiceinfo']["timezone"] = $practiceinfo['timezone'];
+                
+                // provider info
+                $providers = json_decode(json_encode($providers), true);
+                $ma_user['practiceinfo']["license"] = $providers['license'];
+                $ma_user['practiceinfo']["license_state"] = $providers['license_state'];
+                $ma_user['practiceinfo']["npi_number"] = $providers['npi'];
+                $ma_user['practiceinfo']["dea_number"] = $providers['dea'];
+                $ma_user['practiceinfo']["medicare_number"] = $providers['medicare'];
+                $ma_user['practiceinfo']["specialty"] = $providers['specialty'];
+                $ma_user['practiceinfo']["tax_id_number"] = $providers['tax_id'];
+                $ma_user['practiceinfo']["increment_for_schedule_minuntes"] = $providers['schedule_increment'];
+                $ma_user['practiceinfo']["timeslotsperhour"] = $providers['timeslotsperhour'];
                 
             }
 
