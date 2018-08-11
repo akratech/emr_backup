@@ -47,7 +47,7 @@ class UserController extends Controller {
 
             $patient = DB::table('demographics')
             ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-            ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
+            ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB', 'demographics.date')
             ->where('demographics_relate.practice_id', '=', $user->practice_id)
             ->where(function($query_array1) use ($user) {
                 $query_array1->where('demographics.firstname', '=',  $user->firstname)
@@ -67,6 +67,7 @@ class UserController extends Controller {
             $ma_user['api_token'] = $user['api_token'];
             $ma_user['practice_id'] = $user['practice_id'];
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
+            $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? $patient->date : date('d-m-Y');
             $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';;
             if($group_id == 2){
                 $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
