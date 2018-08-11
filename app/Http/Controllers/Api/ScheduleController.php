@@ -73,11 +73,12 @@ class ScheduleController extends Controller
 		            ->where('pid', $pid)->first();
 				}
 				if ($row->timestamp == '0000-00-00 00:00:00' || $row->user_id == '') {
-					$timestamp = '';
+					$timestamp = '';					
 				} else {
 					$user_row = DB::table('users')->where('id', '=', $row->user_id)->first();
-					$timestamp = 'Appointment added by ' . $user_row->displayname . ' on ' . $row->timestamp;
-				}				 
+					$timestamp = $row->timestamp;					
+				}
+				$sub_title = 'Appointment added by ' . $user_row->displayname . ' on ' . $timestamp;
 
 				$row_start = date('c', $row->start);
 				$row_end = date('c', $row->end);
@@ -89,7 +90,8 @@ class ScheduleController extends Controller
 					'className' => $classname,
 					'provider_id' => $row->provider_id,
 					'pid'=> $pid,
-					'timestamp' => $timestamp
+					'timestamp' => $timestamp,
+					'sub_title' => $sub_title
 				];
 				if ($user->group_id == '100' || $user->group_id == 'schedule') {
 					if ($request->get('pid') != $pid) {
