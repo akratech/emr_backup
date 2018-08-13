@@ -144,35 +144,38 @@ class UserController extends Controller {
 
         $return = array('status' => 0, 'message' => '', 'data' => array());
 
-        if($request->has('patient_keywords') && $request->get('patient_keywords') != "") {
+        
+        $keywords = $request->get('patient_keywords');
 
-            $keywords = $request->get('patient_keywords');
+        $patients = DB::table('demographics')
+        ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+        ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
+        ->where('demographics_relate.practice_id', '=', $user->practice_id);
 
-            $patients = DB::table('demographics')
-            ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-            ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
-            ->where('demographics_relate.practice_id', '=', $user->practice_id)
-            ->where(function($query_array1) use ($keywords) {
+        if($keywords) {
+            $patients = $patients->where(function($query_array1) use ($keywords) {
                 $query_array1->where('demographics.lastname', 'LIKE', "%$keywords%")
                 ->orWhere('demographics.firstname', 'LIKE', "%$keywords%")
                 ->orWhere('demographics.pid', 'LIKE', "%$keywords%");
-            })->get();
+            });
+        }
+        $patients = $patients->get();
 
-            if ($patients->count() > 0) {                
+        if ($patients->count() > 0) {                
 
-                foreach($patients as $patient) {
-                    $patient->title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d/m/Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
-                }
-
-                $return['status'] = 1;            
-                $return['message'] = 'Patients list get successfully';
-                $return['data']['patients'] = $patients;
-
-            } else {
-                $return['message'] = 'Patients not found';
+            foreach($patients as $patient) {
+                $patient->title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d/m/Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
             }
 
+            $return['status'] = 1;            
+            $return['message'] = 'Patients list get successfully';
+            $return['data']['patients'] = $patients;
+
+        } else {
+            $return['message'] = 'Patients not found';
         }
+
+
         return  Response::json($return);
     }
 
