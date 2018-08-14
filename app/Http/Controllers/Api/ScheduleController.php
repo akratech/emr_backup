@@ -82,10 +82,21 @@ class ScheduleController extends Controller
 
 				$row_start = date('c', $row->start);
 				$row_end = date('c', $row->end);
+
+				$row_start_date = date('d-m-Y', $row->start);
+				$row_start_time = date('H:i:s', $row->start);
+
+				$row_end_date = date('d-m-Y', $row->end);
+				$row_end_time = date('H:i:s', $row->end);
+
 				$event = [
 					'id' => $row->appt_id,
 					'start' => $row_start,
 					'end' => $row_end,
+					'start_date' => $row_start_date,
+					'start_time' => $row_start_time,
+					'end_date' => $row_end_date,
+					'end_time' => $row_end_time,
 					'visit_type' => $row->visit_type,
 					'className' => $classname,
 					'provider_id' => $row->provider_id,
@@ -156,12 +167,24 @@ class ScheduleController extends Controller
 							if ($row2->reason == '') {
 								$row2->reason = $row2->title;
 							}
+
 							$repeat_start1 = date('c', $repeat_start);
 							$repeat_end1 = date('c', $repeat_end);
+
+							$repeat_start_date1 = date('d-m-Y', $repeat_start);
+							$repeat_start_time1 = date('H:i:s', $repeat_start);
+
+							$repeat_end_date1 = date('d-m-Y', $repeat_end);
+							$repeat_end_time1 = date('H:i:s', $repeat_end);
+
 							$event1 = array(
 								'id' => $repeat_id,
 								'start' => $repeat_start1,
 								'end' => $repeat_end1,
+								'start_date' => $repeat_start_date1,
+								'start_time' => $repeat_start_time1,
+								'end_date' => $repeat_end_date1,
+								'end_time' => $repeat_end_time1,
 								'repeat' => $row2->repeat,
 								'until' => $until,
 								'className' => 'colorblack',
@@ -196,12 +219,24 @@ class ScheduleController extends Controller
 								if ($row2->reason == '') {
 									$row2->reason = $row2->title;
 								}
+								
 								$repeat_start1 = date('c', $repeat_start);
 								$repeat_end1 = date('c', $repeat_end);
+
+								$repeat_start_date1 = date('d-m-Y', $repeat_start);
+								$repeat_start_time1 = date('H:i:s', $repeat_start);
+
+								$repeat_end_date1 = date('d-m-Y', $repeat_end);
+								$repeat_end_time1 = date('H:i:s', $repeat_end);
+
 								$event1 = array(
 									'id' => $repeat_id,
 									'start' => $repeat_start1,
 									'end' => $repeat_end1,
+									'start_date' => $repeat_start_date1,
+									'start_time' => $repeat_start_time1,
+									'end_date' => $repeat_end_date1,
+									'end_time' => $repeat_end_time1,
 									'repeat' => $row2->repeat,
 									'until' => $until,
 									'className' => 'colorblack',
