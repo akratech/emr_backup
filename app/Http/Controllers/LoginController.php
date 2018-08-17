@@ -872,10 +872,10 @@ class LoginController extends Controller {
                 DB::table('users')->where('id', '=', $query->id)->update($data);
                 $this->audit('Update');
                 $url = route('password_reset_response', [$data['password']]);
-                $data2['message_data'] = 'This message is to notify you that you have reset your password with mdNOSH Gateway.<br>';
+                $data2['message_data'] = 'This message is to notify you that you have reset your password in MOBIHEALTH INTERNATIONAL.<br>';
                 $data2['message_data'] .= 'To finish this process, please click on the following link or point your web browser to:<br>';
                 $data2['message_data'] .= $url;
-                $this->send_mail('auth.emails.generic', $data2, 'Reset password to AKRA TELEHEALTH', $request->input('email'), $query->practice_id);
+                $this->send_mail('auth.emails.generic', $data2, 'Reset password to MOBIHEALTH INTERNATIONAL', $request->input('email'), $query->practice_id);
                 $message = 'Password reset.  Check your email for further instructions';
             } else {
                 $message = 'Error - Email address provided not known';

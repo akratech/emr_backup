@@ -33,7 +33,8 @@
         "rcamposp/tcpdi-merger": "0.3.*",
         "elibyy/tcpdf-laravel": "5.3.*",
         "naviocean/laravel-nameparser": "dev-master",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "aws/aws-sdk-php": "^3.64"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
