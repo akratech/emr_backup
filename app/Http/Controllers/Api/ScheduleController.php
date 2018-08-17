@@ -71,6 +71,15 @@ class ScheduleController extends Controller
 					$patients_info = DB::table('demographics')
 		            ->select('pid', 'firstname', 'lastname', 'middle', 'title', 'sex', 'DOB', 'email', 'address', 'city', 'state', 'zip', 'active','photo')
 		            ->where('pid', $pid)->first();
+
+		            if($patients_info->sex == 'm') { 
+	                    $patients_info->sex = "Male" ;
+	                }
+	                if($patients_info->sex == 'f') { 
+	                    $patients_info->sex = "Female"; 
+	                }
+
+	                $patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
 				}
 				if ($row->timestamp == '0000-00-00 00:00:00' || $row->user_id == '') {
 					$timestamp = '';					
@@ -138,7 +147,7 @@ class ScheduleController extends Controller
 					if ($row->status == 'LMC') {
 						$event['borderColor'] = 'red';
 					}
-				}
+				}				
 
 				$event['patients_info'] = $patients_info;
 
