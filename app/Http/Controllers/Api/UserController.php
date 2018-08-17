@@ -33,7 +33,8 @@ class UserController extends Controller {
             "password" => $request->get('password'),            
             "group_id" => $request->get('group'),
             "active" => '1'
-        ];        
+        ];
+
         if ($this->guard('api')->attempt($credentials)) {
 
             $user = $this->guard('api')->user();
@@ -67,8 +68,9 @@ class UserController extends Controller {
             $ma_user['api_token'] = $user['api_token'];
             $ma_user['practice_id'] = $user['practice_id'];
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
-            $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? $patient->date : date('d-M-Y');
-            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';;
+            $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? date('d-M-Y H:i:s',strtotime($patient->date)) : date('d-M-Y H:i:s');
+            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';
+            $ma_user['created_at'] = (isset($user['created_at']) && $user['created_at'] != '') ? date('d-M-Y',strtotime($user['created_at'])) : '';
             if($group_id == 2){
                 $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
                 $providers = DB::table('providers')->where('id', '=', $user['id'])->first();
