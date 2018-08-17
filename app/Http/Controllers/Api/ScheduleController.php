@@ -76,17 +76,18 @@ class ScheduleController extends Controller
 					$timestamp = '';					
 				} else {
 					$user_row = DB::table('users')->where('id', '=', $row->user_id)->first();
-					$timestamp = $row->timestamp;					
+					$timestamp = date('d-M-Y H:i:s',strtotime($row->timestamp));
+                    //$timestamp = $row->timestamp;
 				}
 				$sub_title = 'Appointment added by ' . $user_row->displayname . ' on ' . $timestamp;
 
 				$row_start = date('c', $row->start);
 				$row_end = date('c', $row->end);
 
-				$row_start_date = date('d-m-Y', $row->start);
+				$row_start_date = date('d-M-Y', $row->start);
 				$row_start_time = date('H:i:s', $row->start);
 
-				$row_end_date = date('d-m-Y', $row->end);
+				$row_end_date = date('d-M-Y', $row->end);
 				$row_end_time = date('H:i:s', $row->end);
 
 				$event = [
@@ -171,10 +172,10 @@ class ScheduleController extends Controller
 							$repeat_start1 = date('c', $repeat_start);
 							$repeat_end1 = date('c', $repeat_end);
 
-							$repeat_start_date1 = date('d-m-Y', $repeat_start);
+							$repeat_start_date1 = date('d-M-Y', $repeat_start);
 							$repeat_start_time1 = date('H:i:s', $repeat_start);
 
-							$repeat_end_date1 = date('d-m-Y', $repeat_end);
+							$repeat_end_date1 = date('d-M-Y', $repeat_end);
 							$repeat_end_time1 = date('H:i:s', $repeat_end);
 
 							$event1 = array(
@@ -219,14 +220,14 @@ class ScheduleController extends Controller
 								if ($row2->reason == '') {
 									$row2->reason = $row2->title;
 								}
-								
+
 								$repeat_start1 = date('c', $repeat_start);
 								$repeat_end1 = date('c', $repeat_end);
 
-								$repeat_start_date1 = date('d-m-Y', $repeat_start);
+								$repeat_start_date1 = date('d-M-Y', $repeat_start);
 								$repeat_start_time1 = date('H:i:s', $repeat_start);
 
-								$repeat_end_date1 = date('d-m-Y', $repeat_end);
+								$repeat_end_date1 = date('d-M-Y', $repeat_end);
 								$repeat_end_time1 = date('H:i:s', $repeat_end);
 
 								$event1 = array(
@@ -309,8 +310,10 @@ class ScheduleController extends Controller
 				if ($comp3c < $compmaxTime) {
 					$events = $this->add_closed2('tuesday', $row3->maxTime, $row3->tue_c, $events, $start, $end);
 				}
+				$events['start_date'] = date('d-M-Y',strtotime($start));
+				$events['end_date'] = date('d-M-Y',strtotime($end));
 			} else {
-				$events = $this->add_closed3('tuesday', $row3->minTime, $row3->maxTime, $events, $start, $end);
+				$events = $this->add_closed3('tuesday', $row3->minTime, $row3->maxTime, $events, $start, $end);				
 			}
 
 			if ($row3->wed_o != '') {
