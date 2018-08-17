@@ -33,7 +33,8 @@ class UserController extends Controller {
             "password" => $request->get('password'),            
             "group_id" => $request->get('group'),
             "active" => '1'
-        ];        
+        ];
+
         if ($this->guard('api')->attempt($credentials)) {
 
             $user = $this->guard('api')->user();
@@ -67,8 +68,9 @@ class UserController extends Controller {
             $ma_user['api_token'] = $user['api_token'];
             $ma_user['practice_id'] = $user['practice_id'];
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
-            $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? $patient->date : date('d-m-Y');
-            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';;
+            $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? date('d-M-Y H:i:s A',strtotime($patient->date)) : date('d-M-Y H:i:s A');
+            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';
+            $ma_user['created_at'] = (isset($user['created_at']) && $user['created_at'] != '') ? date('d-M-Y',strtotime($user['created_at'])) : '';
             if($group_id == 2){
                 $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
                 $providers = DB::table('providers')->where('id', '=', $user['id'])->first();
@@ -164,7 +166,14 @@ class UserController extends Controller {
         if ($patients->count() > 0) {                
 
             foreach($patients as $patient) {
-                $patient->title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d/m/Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
+                if($patient->sex == 'm') { 
+                    $patient->sex = "Male" ;
+                }
+                if($patient->sex == 'f') { 
+                    $patient->sex = "Female"; 
+                }
+                $patient->DOB = date('d-M-Y',strtotime($patient->DOB));
+                $patient->title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d-M-Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
             }
 
             $return['status'] = 1;            
@@ -216,13 +225,18 @@ class UserController extends Controller {
 
             if ($query->count() > 0) {
                 foreach ($query as $row) {                    
-                    $row->start = date('Y-m-d H:i:s A', $row->start);
-                    $row->end = date('Y-m-d H:i:s A', $row->end);
+                    $row->start = date('d-M-Y H:i:s A', $row->start);                    
+                    $row->end = date('d-M-Y H:i:s A', $row->end);
+                    $row->start_date = date('d-M-Y', strtotime($row->start));
+                    $row->start_time = date('H:i:s A', strtotime($row->start));
+                    $row->end_date = date('d-M-Y', strtotime($row->end));
+                    $row->end_time = date('H:i:s A', strtotime($row->end));
+                    $row->timestamp = date('d-M-Y H:i:s A', strtotime($row->timestamp));
                 }
 
                 $return['status'] = 1;
                 $return['message'] = 'Appointment get Successfully ';
-                $return['data'] = $query;
+                $return['data']['appointments'] = $query;
 
             } else {
                 $return['message'] = 'No any Appointment';

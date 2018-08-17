@@ -1,4 +1,5 @@
 
+
 ##### 1. Apache web server (needs to be running)
 ##### 2. MySQL database.  
 ##### 3. PHP 5.2 and higher
@@ -121,4 +122,5 @@ will be explained here.  Some tables are depreciated if you happen to see the da
 	vaccine_inventory - Vaccine inventory
 	vaccine_temp - Vaccine temperature log
 	vitals - List of vital signs in a patient encounter.
+
 

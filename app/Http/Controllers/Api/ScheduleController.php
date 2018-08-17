@@ -71,22 +71,32 @@ class ScheduleController extends Controller
 					$patients_info = DB::table('demographics')
 		            ->select('pid', 'firstname', 'lastname', 'middle', 'title', 'sex', 'DOB', 'email', 'address', 'city', 'state', 'zip', 'active','photo')
 		            ->where('pid', $pid)->first();
+
+		            if($patients_info->sex == 'm') { 
+	                    $patients_info->sex = "Male" ;
+	                }
+	                if($patients_info->sex == 'f') { 
+	                    $patients_info->sex = "Female"; 
+	                }
+
+	                $patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
 				}
 				if ($row->timestamp == '0000-00-00 00:00:00' || $row->user_id == '') {
 					$timestamp = '';					
 				} else {
 					$user_row = DB::table('users')->where('id', '=', $row->user_id)->first();
-					$timestamp = $row->timestamp;					
+					$timestamp = date('d-M-Y H:i:s',strtotime($row->timestamp));
+                    //$timestamp = $row->timestamp;
 				}
 				$sub_title = 'Appointment added by ' . $user_row->displayname . ' on ' . $timestamp;
 
 				$row_start = date('c', $row->start);
 				$row_end = date('c', $row->end);
 
-				$row_start_date = date('d-m-Y', $row->start);
+				$row_start_date = date('d-M-Y', $row->start);
 				$row_start_time = date('H:i:s', $row->start);
 
-				$row_end_date = date('d-m-Y', $row->end);
+				$row_end_date = date('d-M-Y', $row->end);
 				$row_end_time = date('H:i:s', $row->end);
 
 				$event = [
@@ -137,7 +147,7 @@ class ScheduleController extends Controller
 					if ($row->status == 'LMC') {
 						$event['borderColor'] = 'red';
 					}
-				}
+				}				
 
 				$event['patients_info'] = $patients_info;
 
@@ -171,10 +181,10 @@ class ScheduleController extends Controller
 							$repeat_start1 = date('c', $repeat_start);
 							$repeat_end1 = date('c', $repeat_end);
 
-							$repeat_start_date1 = date('d-m-Y', $repeat_start);
+							$repeat_start_date1 = date('d-M-Y', $repeat_start);
 							$repeat_start_time1 = date('H:i:s', $repeat_start);
 
-							$repeat_end_date1 = date('d-m-Y', $repeat_end);
+							$repeat_end_date1 = date('d-M-Y', $repeat_end);
 							$repeat_end_time1 = date('H:i:s', $repeat_end);
 
 							$event1 = array(
@@ -219,14 +229,14 @@ class ScheduleController extends Controller
 								if ($row2->reason == '') {
 									$row2->reason = $row2->title;
 								}
-								
+
 								$repeat_start1 = date('c', $repeat_start);
 								$repeat_end1 = date('c', $repeat_end);
 
-								$repeat_start_date1 = date('d-m-Y', $repeat_start);
+								$repeat_start_date1 = date('d-M-Y', $repeat_start);
 								$repeat_start_time1 = date('H:i:s', $repeat_start);
 
-								$repeat_end_date1 = date('d-m-Y', $repeat_end);
+								$repeat_end_date1 = date('d-M-Y', $repeat_end);
 								$repeat_end_time1 = date('H:i:s', $repeat_end);
 
 								$event1 = array(
@@ -309,8 +319,10 @@ class ScheduleController extends Controller
 				if ($comp3c < $compmaxTime) {
 					$events = $this->add_closed2('tuesday', $row3->maxTime, $row3->tue_c, $events, $start, $end);
 				}
+				$events['start_date'] = date('d-M-Y',strtotime($start));
+				$events['end_date'] = date('d-M-Y',strtotime($end));
 			} else {
-				$events = $this->add_closed3('tuesday', $row3->minTime, $row3->maxTime, $events, $start, $end);
+				$events = $this->add_closed3('tuesday', $row3->minTime, $row3->maxTime, $events, $start, $end);				
 			}
 
 			if ($row3->wed_o != '') {
