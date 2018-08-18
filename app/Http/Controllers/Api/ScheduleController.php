@@ -72,7 +72,7 @@ class ScheduleController extends Controller
 		            ->select('pid', 'firstname', 'lastname', 'middle', 'title', 'sex', 'DOB', 'email', 'address', 'city', 'state', 'zip', 'active','photo')
 		            ->where('pid', $pid)->first();
 
-		            if($patients_info && !empty($patients_info)) {
+		            if(isset($patients_info) && !empty($patients_info)) {
 
 			            if($patients_info->sex == 'm') { 
 		                    $patients_info->sex = "Male";
