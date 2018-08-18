@@ -1,5 +1,3 @@
-
-
 ##### 1. Apache web server (needs to be running)
 ##### 2. MySQL database.  
 ##### 3. PHP 5.2 and higher
