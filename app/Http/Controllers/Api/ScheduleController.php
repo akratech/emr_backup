@@ -537,7 +537,16 @@ class ScheduleController extends Controller
                 if ($pid != '0' && $pid !== '') {                	
                     /*$this->schedule_notification($appt_id);*/                    
                 }               
-                $data['appt_id'] = $appt_id;                                
+
+
+                $data['appt_id'] = $appt_id;
+                $data['start'] = date('d-M-Y H:i:s', $data['start']);
+                $data['end'] = date('d-M-Y H:i:s', $data['end']);
+                $data['start_date'] = date('d-M-Y', $data['start']);
+                $data['start_time'] = date('H:i:s', $data['start']);
+                $data['end_date'] = date('d-M-Y', $data['end']);
+                $data['end_time'] = date('H:i:s', $data['end']);
+
                 $return['status'] = 1;
                 $return['message'] = 'Appointment/Event added.';
                
