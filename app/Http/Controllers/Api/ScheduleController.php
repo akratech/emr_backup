@@ -325,8 +325,8 @@ class ScheduleController extends Controller
 				if ($comp3c < $compmaxTime) {
 					$events = $this->add_closed2('tuesday', $row3->maxTime, $row3->tue_c, $events, $start, $end);
 				}
-				$events['start_date'] = date('d-M-Y',strtotime($start));
-				$events['end_date'] = date('d-M-Y',strtotime($end));
+				// $events['start_date'] = date('d-M-Y',strtotime($start));
+				// $events['end_date'] = date('d-M-Y',strtotime($end));
 			} else {
 				$events = $this->add_closed3('tuesday', $row3->minTime, $row3->maxTime, $events, $start, $end);				
 			}
@@ -558,7 +558,7 @@ class ScheduleController extends Controller
 	                    $this->audit('Update');
 	                    if ($notify->start != $start && $notify->end != $end) {
 	                        if ($pid != '0' && $pid !== '') {
-	                        	/*$this->schedule_notification($id);*/	                            
+								/* $this->schedule_notification($id); */
 	                        }
 	                    }
 	                    $return['status'] = 1;
