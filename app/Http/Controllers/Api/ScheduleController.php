@@ -80,8 +80,10 @@ class ScheduleController extends Controller
 		                if($patients_info->sex == 'f') { 
 		                    $patients_info->sex = "Female"; 
 		                }
-
 		                $patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
+		                
+		            } else {
+		            	$patients_info = '';
 		            }
 	                
 				}
