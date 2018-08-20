@@ -70,6 +70,13 @@ class UserController extends Controller {
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
             $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? date('d-M-Y H:i:s A',strtotime($patient->date)) : date('d-M-Y H:i:s A');
             $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';
+
+            if($group_id == 100){
+                $ma_user['sex'] = (isset($patient->sex) && $patient->sex != '') ?  ($patient->sex == 'm') ? 'Male' : ($patient->sex == 'f') ? 'Female' : '' : '';
+                $ma_user['DOB'] = (isset($patient->DOB) && $patient->DOB != '') ? date('d-M-Y',strtotime($patient->DOB)) : '';
+            }
+
+
             $ma_user['created_at'] = (isset($user['created_at']) && $user['created_at'] != '') ? date('d-M-Y',strtotime($user['created_at'])) : '';
             if($group_id == 2){
                 $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
