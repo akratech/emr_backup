@@ -30,6 +30,10 @@ Route::group(["prefix" => "api" ,"middleware" => "auth:api"], function() {
 	Route::post('/update-schedule', ['as' => 'updateScheduleApi', 'uses' => 'Api\ScheduleController@updateSchedule']);
 	Route::post('/delete-schedule', ['as' => 'deleteScheduleApi', 'uses' => 'Api\ScheduleController@deleteSchedule']);
 
+	Route::post('/getMessages', ['as' => 'getMessages', 'uses' => 'Api\MessageController@getMessages']);
+	Route::post('/addMessages', ['as' => 'addMessages', 'uses' => 'Api\MessageController@addMessages']);
+	Route::post('/deleteMessages', ['as' => 'deleteMessages', 'uses' => 'Api\MessageController@deleteMessages']);
+
 });
 
 /*Route::group(["prefix" => "api"], function() {
