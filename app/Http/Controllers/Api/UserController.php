@@ -99,7 +99,7 @@ class UserController extends Controller {
                 $ma_user['practiceinfo']["minTime"] = $practiceinfo['minTime'];
                 $ma_user['practiceinfo']["maxTime"] = $practiceinfo['maxTime'];
                 $ma_user['practiceinfo']["weekends"] = $practiceinfo['weekends'];
-                $ma_user['practiceinfo']["timezone"] = $practiceinfo['timezone'];
+                $ma_user['practiceinfo']["timezone"] = $practiceinfo['timezone'];                
                 
                 // provider info
                 $providers = json_decode(json_encode($providers), true);
@@ -112,6 +112,7 @@ class UserController extends Controller {
                 $ma_user['practiceinfo']["tax_id_number"] = $providers['tax_id'];
                 $ma_user['practiceinfo']["increment_for_schedule_minuntes"] = $providers['schedule_increment'];
                 $ma_user['practiceinfo']["timeslotsperhour"] = $providers['timeslotsperhour'];
+                $ma_user['practiceinfo']["specialty"] = $providers['specialty'];
                 
             }
 
@@ -198,10 +199,32 @@ class UserController extends Controller {
     public function getProviders(Request $request) {
 
         $return = array('status' => 0, 'message' => '', 'data' => array());
+        $name = $request->get('name');
+        $specialty = $request->get('specialty');
 
-        $providers = DB::table('users')            
-        ->select('id', 'username', 'email', 'displayname' ,'firstname', 'lastname')
-        ->where('group_id', '=', 2)->where('active', '=', 1)->get();
+        $providers = DB::table('users')
+        ->leftJoin('providers', 'providers.id', '=', 'users.id')
+        ->select('users.id', 'users.username', 'users.email', 'users.displayname' ,'users.firstname', 'users.lastname', 'providers.specialty', 'providers.specialty')
+        ->where('users.group_id', '=', 2)
+        ->where('users.active', '=', 1);
+
+        // name filter
+        if(trim($name) != "") {
+            $keywords = str_replace(' ', '%', trim($name));            
+            $providers = $providers->where(function($query_array1) use ($keywords) {
+                $query_array1->where('users.displayname', 'LIKE', "%$keywords%")
+                ->orWhere('users.firstname', 'LIKE', "%$keywords%")
+                ->orWhere('users.lastname', 'LIKE', "%$keywords%");
+            });
+        }
+
+        // specialty filter
+        if(trim($specialty) != "") {
+            $keywords = str_replace(' ', '%', trim($specialty));            
+            $providers = $providers->where('providers.specialty', 'LIKE', "%$keywords%");
+        }
+
+        $providers = $providers->get();
 
         if ($providers->count() > 0) {
 
