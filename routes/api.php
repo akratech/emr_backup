@@ -33,6 +33,8 @@ Route::group(["prefix" => "api" ,"middleware" => "auth:api"], function() {
 	Route::post('/getMessages', ['as' => 'getMessages', 'uses' => 'Api\MessageController@getMessages']);
 	Route::post('/addMessages', ['as' => 'addMessages', 'uses' => 'Api\MessageController@addMessages']);
 	Route::post('/deleteMessages', ['as' => 'deleteMessages', 'uses' => 'Api\MessageController@deleteMessages']);
+	Route::post('/getTousers', ['as' => 'getTousers', 'uses' => 'Api\MessageController@getTousers']);
+	Route::post('/searchPatient', ['as' => 'searchPatient', 'uses' => 'Api\MessageController@searchPatient']);
 
 });
 
