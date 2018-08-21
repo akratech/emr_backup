@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xml:lang="en" lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="language" content="en" />
+	<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+	<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="https://emr.mobihealthinternational.com/assets/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="https://emr.mobihealthinternational.com/assets/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="https://emr.mobihealthinternational.com/assets/css/OnlineVideoConference.css"
+	/>
+	<title>Online Video Conference with Dr. dev</title>
+</head>
+
+<body onload="my_init()">
+	<div id="content">
+		<div class="wrapper">
+			<h2 class="white">Online Video Conference with Dr. dev</h2>
+
+			<div class="row">
+
+				<div class="col-md-8">
+
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 id="partnerName" class="panel-title"></h3>
+
+
+						</div>
+						<div class="panel-body panel-video">
+							<div id="subscriber" style="min-height:500px; width: 100%;">
+
+								<video id="partner" style="min-height:500px; width: 100%;background-color: #000;"></video>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+				<!-- col-md-8 -->
+
+				<div class="col-md-4">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Me</h3>
+
+						</div>
+						<div class="panel-body panel-video">
+							<div id="publisher" style="min-height: 275px;width: 100%;">
+
+								<video id="self" muted="muted" volume="0" style="width: 100%;min-height: 222px;background-color: #000;"></video>
+								</video>
+							</div>
+							<button type="button" class="btn btn-success" id="publishVideo" style="display:block">Publish video</button>
+							<button type="button" class="btn btn-warning" id="unpublishVideo" style="display:block">Unpublish video</button>
+							<!--button type="button" class="btn btn-default btn-leave" id ="disconnectLink" style="display:block">Leave room</button-->
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Notifications</h3>
+						</div>
+						<div class="panel-body">
+							<div id="notification">
+								<div id="notice-0" class="alert alert-dismissable alert-danger video-notice">You've restricted audio and video permissions.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--notice and publisher section -->
+
+			</div>
+			<!-- row -->
+
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-info">
+						<div class="panel-heading purple-bg">
+							<h3 class="panel-title">Messages</h3>
+						</div>
+						<div class="panel-body">
+							<div id="messages" style="overflow-y: scroll;">
+
+							</div>
+							
+								<div class="input-group has-success">
+									<input autocomplete="off" type="text" id="message" name="message" class="form-control">
+									<span class="input-group-btn">
+										<input type="button" class="btn btn-success" onclick="sendmessage()" id="submit" value="Submit">
+									</span>
+								</div>
+								<!-- /input-group -->
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- wrapper -->
+	</div>
+	<!-- content -->
+	<script type="text/javascript" src="assets/js/adapter-latest.js"></script>	
+	<script type="text/javascript" src="https://emr.mobihealthinternational.com/assets/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="https://emr.mobihealthinternational.com/assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/js/socket.io.js"></script>
+	<script type="text/javascript" src="assets/js/easyrtc.js"></script>
+	<script type="text/javascript" src="assets/js/main.js"></script>
+</body>
+
+</html>
