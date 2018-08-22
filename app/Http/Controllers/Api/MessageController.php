@@ -153,7 +153,7 @@ class MessageController extends Controller
 			if ($practiceinfo->patient_centric == 'yp') {
 				$query = DB::table('users')->select('id','username','displayname','firstname','lastname')->where('group_id', '!=', '1')->where('active', '=', '1')->get();
 			} else {
-				$query = DB::table('users')->select('id','username','displayname','firstname','lastname')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->where('active', '=', '1')->get();
+				$query = DB::table('users')->select('id','username','displayname','firstname','lastname')->where('group_id', '!=', '1')->where('practice_id', '=', $user->practice_id)->where('active', '=', '1')->get();
 			}
 		}
 		if ($query->count()) {
@@ -217,7 +217,7 @@ class MessageController extends Controller
 				$user_row = DB::table('users')->where('id', '=',$mailbox_row)->first();
 				if ($user_row->group_id === '100') {
 					$data_message['patient_portal'] = $practice->patient_portal;
-					$this->send_mail('emails.newmessage', $data_message, 'New Message in your Patient Portal', $user_row->email, Session::get('practice_id'));
+					$this->send_mail('emails.newmessage', $data_message, 'New Message in your Patient Portal', $user_row->email, $user->practice_id);
 				}
 			}
 		}
