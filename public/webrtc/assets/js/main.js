@@ -41,26 +41,13 @@ if (QueryString.pname) {
     document.getElementById('partnerName').innerText=partnerName;
 }
 
-easyrtc.setSocketUrl("//litesignal.tokbird.com:443");
+easyrtc.setSocketUrl("//media.mobihealthinternational.com:8443");
 easyrtc.enableDebug(false);
 easyrtc.setOnError(function (errEvent) {
     console.log(errEvent.errorText);
 });
-easyrtc.setStreamAcceptor(function (callerEasyrtcid, stream) {
-    let videoobj = document.getElementById("partner");
-    partnerID = callerEasyrtcid;
-    easyrtc.setVideoObjectSrc(videoobj, stream);
 
-
-});
-
-easyrtc.setOnStreamClosed(function (callerEasyrtcid) {
-    partnerID = null;
-    easyrtc.setVideoObjectSrc(document.getElementById('partner'), "");
-
-});
-
-
+//function used for intializing EasyRTC
 function my_init() {
 
     easyrtc.setRoomOccupantListener(loggedInListener);
@@ -81,7 +68,7 @@ function my_init() {
     );
 }
 
-
+//function handling the connections on the room
 function loggedInListener(roomName, otherPeers) {
 
     easyrtc.setRoomOccupantListener(null); // so we're only called once.
@@ -111,6 +98,7 @@ function loggedInListener(roomName, otherPeers) {
                 establishConnection(position - 1);
             }
         }
+        //calling the peer connection for establishing video call
         easyrtc.call(list[position], callSuccess, callFailure);
 
     }
@@ -119,7 +107,25 @@ function loggedInListener(roomName, otherPeers) {
     }
     //console.log("Total users-->"+list.length)
 }
+//function would call when a partner stream is joined on the call
+easyrtc.setStreamAcceptor(function (callerEasyrtcid, stream) {
+    //setting the source of the partner video obj
+    let videoobj = document.getElementById("partner");
+    partnerID = callerEasyrtcid;
+    easyrtc.setVideoObjectSrc(videoobj, stream);
 
+
+});
+
+//function would call when a partner stream is closed or disconnect
+easyrtc.setOnStreamClosed(function (callerEasyrtcid) {
+    //clearing the streamkey
+    partnerID = null;
+    easyrtc.setVideoObjectSrc(document.getElementById('partner'), "");
+
+});
+
+//function used for chat message
 function sendmessage() {
     let text = document.getElementById('message').value;
     if (text.replace(/\s/g, "").length === 0) { // Don't send just whitespace
@@ -137,12 +143,12 @@ function sendmessage() {
     addToConversation("me", "message", text);
     document.getElementById('message').value = "";
 }
-
+//function would call when a new chat is received
 function peerListener(who, msgType, content, targeting) {
     addToConversation(who, msgType, content, targeting);
     console.log(content);
 }
-
+//function used for adding conversation on the chat panel
 function addToConversation(who, msgType, content, targeting) {
     // Escape html special characters, then add linefeeds.
     content = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
