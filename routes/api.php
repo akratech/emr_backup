@@ -30,11 +30,13 @@ Route::group(["prefix" => "api" ,"middleware" => "auth:api"], function() {
 	Route::post('/update-schedule', ['as' => 'updateScheduleApi', 'uses' => 'Api\ScheduleController@updateSchedule']);
 	Route::post('/delete-schedule', ['as' => 'deleteScheduleApi', 'uses' => 'Api\ScheduleController@deleteSchedule']);
 
-	Route::post('/getMessages', ['as' => 'getMessages', 'uses' => 'Api\MessageController@getMessages']);
-	Route::post('/addMessages', ['as' => 'addMessages', 'uses' => 'Api\MessageController@addMessages']);
-	Route::post('/deleteMessages', ['as' => 'deleteMessages', 'uses' => 'Api\MessageController@deleteMessages']);
-	Route::post('/getTousers', ['as' => 'getTousers', 'uses' => 'Api\MessageController@getTousers']);
-	Route::post('/searchPatient', ['as' => 'searchPatient', 'uses' => 'Api\MessageController@searchPatient']);
+	Route::any('/getMessages', ['as' => 'getMessages', 'uses' => 'Api\MessageController@getMessages']);
+	Route::any('/addMessages', ['as' => 'addMessages', 'uses' => 'Api\MessageController@addMessages']);
+	Route::any('/deleteMessages', ['as' => 'deleteMessages', 'uses' => 'Api\MessageController@deleteMessages']);
+	Route::any('/getTousers', ['as' => 'getTousers', 'uses' => 'Api\MessageController@getTousers']);
+	Route::any('/searchPatient', ['as' => 'searchPatient', 'uses' => 'Api\MessageController@searchPatient']);
+
+	Route::any('/getPrescriptions', ['as' => 'getPrescriptions', 'uses' => 'Api\PrescriptionController@getPrescriptions']);
 
 });
 
