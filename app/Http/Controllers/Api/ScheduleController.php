@@ -540,12 +540,14 @@ class ScheduleController extends Controller
 
 
                 $data['appt_id'] = $appt_id;
+                $start_date = $data['start'];
+                $end_date = $data['end'];
                 $data['start'] = date('d-M-Y H:i:s', $data['start']);
                 $data['end'] = date('d-M-Y H:i:s', $data['end']);
-                $data['start_date'] = date('d-M-Y', $data['start']);
-                $data['start_time'] = date('H:i:s', $data['start']);
-                $data['end_date'] = date('d-M-Y', $data['end']);
-                $data['end_time'] = date('H:i:s', $data['end']);
+                $data['start_date'] = date('d-M-Y', $start_date);
+                $data['start_time'] = date('H:i:s', $start_date);
+                $data['end_date'] = date('d-M-Y', $end_date);
+                $data['end_time'] = date('H:i:s', $end_date);
 
                 $return['status'] = 1;
                 $return['message'] = 'Appointment/Event added.';
