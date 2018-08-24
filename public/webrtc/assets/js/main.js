@@ -3,6 +3,8 @@ var partnerID;
 var myName;
 var partnerName;
 var room_name = 'default';
+var current_duration=0;
+var duration_Interval;
 
 var QueryString = function () {
     var query_string = {};
@@ -113,6 +115,8 @@ easyrtc.setStreamAcceptor(function (callerEasyrtcid, stream) {
     let videoobj = document.getElementById("partner");
     partnerID = callerEasyrtcid;
     easyrtc.setVideoObjectSrc(videoobj, stream);
+    //calling the duration update function
+    duration_Interval = setInterval(updateDuration, 5000);
 
 
 });
@@ -122,6 +126,9 @@ easyrtc.setOnStreamClosed(function (callerEasyrtcid) {
     //clearing the streamkey
     partnerID = null;
     easyrtc.setVideoObjectSrc(document.getElementById('partner'), "");
+    //clearing the duration
+    clearInterval(duration_Interval);
+    current_duration=0;
 
 });
 
@@ -161,4 +168,18 @@ function addToConversation(who, msgType, content, targeting) {
         who=partnerName;
     }
      document.getElementById('messages').innerHTML += '<div class="row"><div class="col-lg-2"><span class="blue-color"><strong>' + who + '</strong><br><small>2018-08-16 16:04:22</small></span></div><div class="col-md-10"><blockquote class="' + _class + '"><small>' + content + '</small></blockquote></div></div>';
+}
+//function for updating the duration
+function updateDuration()
+{
+    current_duration+=5;
+    console.log(current_duration);
+}
+
+//function called on room leaving
+
+function onLeaveRoom()
+{
+    easyrtc.hangupAll();
+    easyrtc.disconnect();
 }
