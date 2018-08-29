@@ -35,14 +35,16 @@ class ScheduleController extends Controller
             'start_date' => 'required',
             'end_end' => 'required',
             'provider_id' => 'required',
+        ],[
+        	'start_date.required' => 'Please select start date',
+            'end_end.required' => 'Please select end date',
+            'provider_id.required' => 'Invalid provider',
         ]);
 
-        if ($validator->fails()) {         
-
-        	$return['message'] = 'Validation Error Occurred';
-        	$return['error'] = $validator;
-
-            return response()->json($return);
+        if ($validator->fails()) { 
+			$return['error'] = $validator->errors()->toArray();
+			$return['message'] = 'Validation Error Occurred';
+        	return response()->json($return);
         }        
 
 		$start = strtotime($request->get('start_date'));
@@ -69,8 +71,9 @@ class ScheduleController extends Controller
 				} else {
 					$pid = $row->pid;
 					$patients_info = DB::table('demographics')
-		            ->select('pid', 'firstname', 'lastname', 'middle', 'title', 'sex', 'DOB', 'email', 'address', 'city', 'state', 'zip', 'active','photo')
-		            ->where('pid', $pid)->first();
+		            ->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')
+		            ->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
+		            ->where('demographics.pid', $pid)->first();
 
 		            if(isset($patients_info) && !empty($patients_info)) {
 
@@ -81,6 +84,7 @@ class ScheduleController extends Controller
 		                    $patients_info->sex = "Female"; 
 		                }
 		                $patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
+		                $patients_info->title = $patients_info->lastname.', '.$patients_info->firstname.' (DOB: '.date('d-M-Y',strtotime($patients_info->DOB)).') (ID: '.$patients_info->pid.')';
 		                
 		            } else {
 		            	$patients_info = '';
@@ -407,14 +411,20 @@ class ScheduleController extends Controller
 			'start_date' => 'required',
 			'start_time' => 'required',
             'end_time' => 'required',
+        ],[
+        	'provider_id.required' => 'Invalid provider',
+			'reason.required' => 'Please enter reason',	
+			'title.required' => 'Please enter title',						
+			'start_date.required' => 'Please select star date',
+			'start_time.required' => 'Please select start time',
+            'end_time.required' => 'Please select end time',
         ]);
 
         if ($validator->fails()) {
-        	$return['message'] = 'Validation Error Occurred';
-        	$return['error'] = $validator;
-            return response()->json($return);                
+        	$return['error'] = $validator->errors()->toArray();
+			$return['message'] = 'Validation Error Occurred';
+        	return response()->json($return);
         }
-
 
         if ($user->group_id == '100') {        	
             $pid = $request->get('pid');

@@ -44,17 +44,7 @@ class UserController extends Controller {
             $user->device_platform = $request->has('device_platform') ? $request->get('device_platform') : '';
             $user->android_push_ids = $request->has('android_push_ids') ? $request->get('android_push_ids') : '';
             $user->ios_push_ids = $request->has('ios_push_ids') ? $request->get('ios_push_ids') : '';
-            $user->save();
-
-            $patient = DB::table('demographics')
-            ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-            ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB', 'demographics.date')
-            ->where('demographics_relate.practice_id', '=', $user->practice_id)
-            ->where(function($query_array1) use ($user) {
-                $query_array1->where('demographics.firstname', '=',  $user->firstname)
-                ->orWhere('demographics.lastname', '=', $user->lastname);
-            })
-            ->first();
+            $user->save();            
 
             $ma_user['id'] = $user['id'];
             $ma_user['username'] = $user['username'];
@@ -67,20 +57,53 @@ class UserController extends Controller {
             $ma_user['group'] = $user['group'] == 2 ? 'Doctor' : 'Patient';            
             $ma_user['api_token'] = $user['api_token'];
             $ma_user['practice_id'] = $user['practice_id'];
+            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';
+
+            $patient = DB::table('demographics')            
+            ->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')
+            ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+            ->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
+            ->where('demographics_relate.practice_id', '=', $user->practice_id)
+            ->where(function($query_array1) use ($user) {
+                $query_array1->where('demographics.firstname', '=',  $user->firstname)
+                ->orWhere('demographics.lastname', '=', $user->lastname);
+            })
+            ->first();
+
             $ma_user['pid'] = (isset($patient->pid) && $patient->pid != '') ? $patient->pid : '';
             $ma_user['date'] = (isset($patient->date) && $patient->date != '') ? date('d-M-Y H:i:s A',strtotime($patient->date)) : date('d-M-Y H:i:s A');
-            $ma_user['uid'] = (isset($user['uid']) && $user['uid'] != '') ? $user['uid']: '';
+
+            $ma_user['created_at'] = (isset($user['created_at']) && $user['created_at'] != '') ? date('d-M-Y',strtotime($user['created_at'])) : '';
 
             if($group_id == 100){
                 $ma_user['sex'] = (isset($patient->sex) && $patient->sex != '') ?  ($patient->sex == 'm') ? 'Male' : ($patient->sex == 'f') ? 'Female' : '' : '';
                 $ma_user['DOB'] = (isset($patient->DOB) && $patient->DOB != '') ? date('d-M-Y',strtotime($patient->DOB)) : '';
-            }
 
+                // Patient Info
+                $title = '';
+                if(isset($patient->lastname) && isset($patient->firstname) && isset($patient->DOB) && isset($patient->pid) && $patient->lastname != '' && $patient->firstname != '' && $patient->DOB != '' && $patient->pid != '') {
+                    $title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d-M-Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
+                }
+                $ma_user['patientinfo']['title'] = $title;
+                $ma_user['patientinfo']['address'] = (isset($patient->address) && $patient->address != '') ? $patient->address : '';
+                $ma_user['patientinfo']['city'] = (isset($patient->city) && $patient->city != '') ? $patient->city : '';
+                $ma_user['patientinfo']['state'] = (isset($patient->state) && $patient->state != '') ? $patient->state : '';
+                $ma_user['patientinfo']['zip'] = (isset($patient->zip) && $patient->zip != '') ? $patient->zip : '';
+                $ma_user['patientinfo']['language'] = (isset($patient->language) && $patient->language != '') ? $patient->language : '';
+                $ma_user['patientinfo']['photo'] = (isset($patient->photo) && $patient->photo != '') ? $patient->photo : '';
+                $ma_user['patientinfo']['weight'] = (isset($patient->weight) && $patient->weight != '') ? $patient->weight : '';
+                $ma_user['patientinfo']['height'] = (isset($patient->height) && $patient->height != '') ? $patient->height : '';
+                $ma_user['patientinfo']['BMI'] = (isset($patient->BMI) && $patient->BMI != '') ? $patient->BMI : '';
+                $ma_user['patientinfo']['bp_systolic'] = (isset($patient->bp_systolic) && $patient->bp_systolic != '') ? $patient->bp_systolic : '';
+                $ma_user['patientinfo']['bp_diastolic'] = (isset($patient->bp_diastolic) && $patient->bp_diastolic != '') ? $patient->bp_diastolic : '';
+                $ma_user['patientinfo']['bp_position'] = (isset($patient->bp_position) && $patient->bp_position != '') ? $patient->bp_position : '';
+                $ma_user['patientinfo']['pulse'] = (isset($patient->pulse) && $patient->pulse != '') ? $patient->pulse : '';
+                $ma_user['patientinfo']['respirations'] = (isset($patient->respirations) && $patient->respirations != '') ? $patient->respirations : '';
+            }            
 
-            $ma_user['created_at'] = (isset($user['created_at']) && $user['created_at'] != '') ? date('d-M-Y',strtotime($user['created_at'])) : '';
             if($group_id == 2){
+                // Practice Info
                 $practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', $user['practice_id'])->first();
-                $providers = DB::table('providers')->where('id', '=', $user['id'])->first();
                 $practiceinfo = json_decode(json_encode($practiceinfo), true);
                 $ma_user['practiceinfo']["sun_o"] = $practiceinfo['sun_o'];
                 $ma_user['practiceinfo']["sun_c"] = $practiceinfo['sun_c'];
@@ -102,18 +125,22 @@ class UserController extends Controller {
                 $ma_user['practiceinfo']["timezone"] = $practiceinfo['timezone'];                
                 
                 // provider info
+                $providers = DB::table('providers')->where('id', '=', $user['id'])->first();
                 $providers = json_decode(json_encode($providers), true);
+                $ma_user['practiceinfo']["description"] = $providers['description'];
+                $ma_user['practiceinfo']["language"] = $providers['Language'];
+                $ma_user['practiceinfo']["country"] = $providers['Country'];
+                $ma_user['practiceinfo']["photo"] = $providers['photo'];
+                $ma_user['practiceinfo']["certificate"] = $providers['certificate']; 
+                $ma_user['practiceinfo']["specialty"] = $providers['specialty'];               
                 $ma_user['practiceinfo']["license"] = $providers['license'];
                 $ma_user['practiceinfo']["license_state"] = $providers['license_state'];
                 $ma_user['practiceinfo']["npi_number"] = $providers['npi'];
                 $ma_user['practiceinfo']["dea_number"] = $providers['dea'];
-                $ma_user['practiceinfo']["medicare_number"] = $providers['medicare'];
-                $ma_user['practiceinfo']["specialty"] = $providers['specialty'];
+                $ma_user['practiceinfo']["medicare_number"] = $providers['medicare'];                
                 $ma_user['practiceinfo']["tax_id_number"] = $providers['tax_id'];
                 $ma_user['practiceinfo']["increment_for_schedule_minuntes"] = $providers['schedule_increment'];
                 $ma_user['practiceinfo']["timeslotsperhour"] = $providers['timeslotsperhour'];
-                $ma_user['practiceinfo']["specialty"] = $providers['specialty'];
-                
             }
 
             $return['status'] = 1;
@@ -124,6 +151,19 @@ class UserController extends Controller {
         else{
             $return['message'] = 'Invalid username or password.';
         }
+        return  Response::json($return);
+    }
+
+    public function updateProfile(Request $request) {
+
+        $return = array('status' => 0, 'message' => '', 'data' => array());
+
+        
+
+        $return['status'] = 1;
+        $return['message'] = 'Profile updated Successfully.';
+        $return['data']['user'] = array();
+
         return  Response::json($return);
     }
 
@@ -153,14 +193,14 @@ class UserController extends Controller {
         $user = Auth::guard('api')->user();
 
         $return = array('status' => 0, 'message' => '', 'data' => array());
-
         
         $keywords = $request->get('patient_keywords');
 
-        $patients = DB::table('demographics')
-        ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-        ->select('demographics.pid', 'demographics.firstname', 'demographics.lastname', 'demographics.state', 'demographics.sex', 'demographics.DOB')
-        ->where('demographics_relate.practice_id', '=', $user->practice_id);
+        $patients = DB::table('demographics')        
+            ->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')        
+            ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+            ->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
+            ->where('demographics_relate.practice_id', '=', $user->practice_id);
 
         if($keywords) {
             $patients = $patients->where(function($query_array1) use ($keywords) {
@@ -169,6 +209,7 @@ class UserController extends Controller {
                 ->orWhere('demographics.pid', 'LIKE', "%$keywords%");
             });
         }
+
         $patients = $patients->get();
 
         if ($patients->count() > 0) {                
@@ -201,10 +242,12 @@ class UserController extends Controller {
         $return = array('status' => 0, 'message' => '', 'data' => array());
         $name = $request->get('name');
         $specialty = $request->get('specialty');
+        $language = $request->get('language');
 
         $providers = DB::table('users')
         ->leftJoin('providers', 'providers.id', '=', 'users.id')
-        ->select('users.id', 'users.username', 'users.email', 'users.displayname' ,'users.firstname', 'users.lastname', 'providers.specialty', 'providers.specialty')
+        ->select('users.id', 'users.username', 'users.email', 'users.displayname' ,'users.firstname', 'users.lastname', 'providers.description','providers.specialty', 'providers.Language as language','providers.Country as country','providers.photo','providers.certificate','providers.license','providers.license_state','providers.npi','providers.dea','providers.medicare','providers.tax_id','providers.schedule_increment AS increment_for_schedule_minuntes','providers.timeslotsperhour','practiceinfo.minTime','practiceinfo.maxTime','practiceinfo.weekends','practiceinfo.timezone','practiceinfo.sun_o','practiceinfo.sun_c','practiceinfo.mon_o','practiceinfo.mon_c','practiceinfo.tue_o','practiceinfo.tue_c','practiceinfo.wed_o','practiceinfo.wed_c','practiceinfo.thu_o','practiceinfo.thu_c','practiceinfo.fri_o','practiceinfo.fri_c','practiceinfo.sat_o','practiceinfo.sat_c')
+        ->leftJoin('practiceinfo', 'practiceinfo.practice_id', '=', 'users.practice_id')
         ->where('users.group_id', '=', 2)
         ->where('users.active', '=', 1);
 
@@ -222,6 +265,12 @@ class UserController extends Controller {
         if(trim($specialty) != "") {
             $keywords = str_replace(' ', '%', trim($specialty));            
             $providers = $providers->where('providers.specialty', 'LIKE', "%$keywords%");
+        }
+
+        // language filter
+        if(trim($language) != "") {
+            $language = str_replace(' ', '%', trim($language));            
+            $providers = $providers->where('providers.language', '=', "%$language%");
         }
 
         $providers = $providers->get();
