@@ -13,6 +13,7 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\User;
 
+use App\Helper\FunctionUtils;
 
 use Validator;
 use DB;
@@ -156,11 +157,84 @@ class UserController extends Controller {
 
     public function updateProfile(Request $request) {
 
-        $return = array('status' => 0, 'message' => '', 'data' => array());       
+        $user = Auth::guard('api')->user();
 
-        $return['status'] = 1;
-        $return['message'] = 'Profile updated Successfully.';
-        $return['data']['user'] = array();
+        $return = array('status' => 0, 'message' => '', 'data' => array());
+
+        $rules['group_id'] = 'required';
+        $rules['photo'] = 'image|mimes:jpg,jpeg,png|max:2048';
+
+        $rules_msg['group_id.required'] = 'Please set user group';
+        $rules_msg['photo.max'] = "Profile picture size should be maximum 2MB";
+
+        if($request->has('group_id') && $request->get('group_id') == 100) {           
+            // $rules['user_id'] = 'required';
+            // $rules_msg['group_id.required'] = 'Please set user group';
+        }
+
+        if($request->has('group_id') && $request->get('group_id') == 2) {
+            // $rules['group_id'] = 'required';
+            // $rules_msg['group_id.required'] = 'Please set user group';   
+        }        
+
+        $validator = Validator::make($request->all(), $rules, $rules_msg);
+        if ($validator->fails()) { 
+            $return['error'] = $validator->errors()->toArray();
+            $return['message'] = 'Validation Error Occurred';
+            return response()->json($return);
+        }
+
+        if($request->has('group_id') && $request->get('group_id') == 100) {
+
+            $patient = DB::table('demographics')->where('pid', '=', $user->id)->first();
+
+            $data = array();
+
+            if ($request->hasFile("photo")) {
+                $file = $request->file('photo');                    
+                FunctionUtils::createDir('profile');
+                $oldfile = FunctionUtils::getProfileUploadPath() . $patient->photo;
+                if (is_file($oldfile)) {
+                    unlink($oldfile);
+                }
+                if ($file_name = FunctionUtils::UploadFile($file, FunctionUtils::getProfileUploadPath())) {
+                    $data['photo'] = $file_name;
+                }
+            }
+
+            DB::table('demographics')->where('pid', '=', $user->id)->update($data);
+
+            if($this->audit('Update')) {
+                $return['status'] = 1;
+                $return['message'] = 'Profile updated Successfully.';
+            }
+        }
+
+        if($request->has('group_id') && $request->get('group_id') == 2) {
+
+            $provider = DB::table('providers')->where('providers.id', '=', $user->id)->first();
+
+            $data = array();
+
+            if ($request->hasFile("photo")) {
+                $file = $request->file('photo');                    
+                FunctionUtils::createDir('profile');
+                $oldfile = FunctionUtils::getProfileUploadPath() . $provider->photo;
+                if (is_file($oldfile)) {
+                    unlink($oldfile);
+                }
+                if ($file_name = FunctionUtils::UploadFile($file, FunctionUtils::getProfileUploadPath())) {
+                    $data['photo'] = $file_name;
+                }
+            }
+
+            DB::table('providers')->where('providers.id', '=', $user->id)->update($data);
+
+            if($this->audit('Update')) {
+                $return['status'] = 1;
+                $return['message'] = 'Profile updated Successfully.';
+            }
+        }
 
         return  Response::json($return);
     }
@@ -297,8 +371,7 @@ class UserController extends Controller {
         return  Response::json($return);
     }
 
-    public function getAppointments(Request $request)
-    {
+    public function getAppointments(Request $request) {
 
         $return = array('status' => 0, 'message' => '', 'data' => array());
 
@@ -335,6 +408,6 @@ class UserController extends Controller {
             $return['message'] = 'Invalid Provider';
         }
         return  Response::json($return);
-
     }
+
 }
