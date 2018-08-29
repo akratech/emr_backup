@@ -156,9 +156,7 @@ class UserController extends Controller {
 
     public function updateProfile(Request $request) {
 
-        $return = array('status' => 0, 'message' => '', 'data' => array());
-
-        
+        $return = array('status' => 0, 'message' => '', 'data' => array());       
 
         $return['status'] = 1;
         $return['message'] = 'Profile updated Successfully.';
@@ -196,6 +194,8 @@ class UserController extends Controller {
         
         $keywords = $request->get('patient_keywords');
 
+        $pid = $request->has('pid') ? $request->get('pid') : '';
+
         $patients = DB::table('demographics')        
             ->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')        
             ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
@@ -208,6 +208,10 @@ class UserController extends Controller {
                 ->orWhere('demographics.firstname', 'LIKE', "%$keywords%")
                 ->orWhere('demographics.pid', 'LIKE', "%$keywords%");
             });
+        }
+
+        if($pid != '') {
+            $patients = $patients->where('demographics.pid', $pid);            
         }
 
         $patients = $patients->get();
@@ -240,9 +244,11 @@ class UserController extends Controller {
     public function getProviders(Request $request) {
 
         $return = array('status' => 0, 'message' => '', 'data' => array());
-        $name = $request->get('name');
-        $specialty = $request->get('specialty');
-        $language = $request->get('language');
+
+        $provider_id = $request->has('provider_id') ? $request->get('provider_id') : '';
+        $name = $request->has('name') ? $request->get('name') : '';
+        $specialty = $request->has('specialty') ? $request->get('specialty') : '';
+        $language = $request->has('language') ? $request->get('language') : '';
 
         $providers = DB::table('users')
         ->leftJoin('providers', 'providers.id', '=', 'users.id')
@@ -269,8 +275,12 @@ class UserController extends Controller {
 
         // language filter
         if(trim($language) != "") {
-            $language = str_replace(' ', '%', trim($language));            
-            $providers = $providers->where('providers.language', '=', "%$language%");
+            $language = str_replace(' ', '%', trim($language));
+            $providers = $providers->where('providers.language', 'LIKE', "%$language%");
+        }
+
+        if($provider_id != '') {
+            $providers = $providers->where('users.id', $provider_id);            
         }
 
         $providers = $providers->get();

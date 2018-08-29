@@ -22,7 +22,7 @@ Route::post("/api/logout", ["as" => "logout", "uses" => "Api\UserController@logo
 
 Route::group(["prefix" => "api" ,"middleware" => "auth:api"], function() {
 
-	Route::post("/update-profile", ["as" => "updateProfileApi", "uses" => "Api\UserController@updateProfile"]);
+	Route::post("/update-profile", ["as" => "updateProfileApi", "uses" => "Api\UserController@updateProfile"]);	
 
 	Route::post("/search-patient", ["as" => "searchPatientApi", "uses" => "Api\UserController@searchPatient"]);
 	Route::post("/get-providers", ["as" => "getProvidersApi", "uses" => "Api\UserController@getProviders"]);
