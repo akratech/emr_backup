@@ -31,6 +31,10 @@ class FunctionUtils {
         return url('uploads/');
     }
 
+    public static function getProfileUploadUrl() {
+        return url('uploads/profile') . '/';
+    }
+
     public static function getUploadPath() {
         $path = public_path() . '/uploads/';
         if (!is_dir($path)) {            
@@ -66,11 +70,11 @@ class FunctionUtils {
         }
     }
 
-    public static function getProfilePicture($profile_picture) {
+    public static function getProfilePicture($profile_picture) {                
         if($profile_picture != '' && file_exists(public_path('uploads/profile/'.$profile_picture))) {
             $profile = URL::asset(FunctionUtils::getUploadUrl()."/profile/".$profile_picture);
         } else {            
-            $profile = URL::asset('/images/user.png');
+            $profile = "";
         }
         return $profile;
     }

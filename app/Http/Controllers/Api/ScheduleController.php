@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
+use App\Helper\FunctionUtils;
+
 use Mail;
 use Hash;
 use DB;
@@ -85,6 +87,7 @@ class ScheduleController extends Controller
 		                }
 		                $patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
 		                $patients_info->title = $patients_info->lastname.', '.$patients_info->firstname.' (DOB: '.date('d-M-Y',strtotime($patients_info->DOB)).') (ID: '.$patients_info->pid.')';
+		                $patients_info->photo = FunctionUtils::getProfilePicture($patients_info->photo);
 		                
 		            } else {
 		            	$patients_info = '';

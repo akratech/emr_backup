@@ -91,7 +91,7 @@ class UserController extends Controller {
                 $ma_user['patientinfo']['state'] = (isset($patient->state) && $patient->state != '') ? $patient->state : '';
                 $ma_user['patientinfo']['zip'] = (isset($patient->zip) && $patient->zip != '') ? $patient->zip : '';
                 $ma_user['patientinfo']['language'] = (isset($patient->language) && $patient->language != '') ? $patient->language : '';
-                $ma_user['patientinfo']['photo'] = (isset($patient->photo) && $patient->photo != '') ? $patient->photo : '';
+                $ma_user['patientinfo']['photo'] = (isset($patient->photo) && $patient->photo != '') ? FunctionUtils::getProfilePicture($patient->photo) : '';
                 $ma_user['patientinfo']['weight'] = (isset($patient->weight) && $patient->weight != '') ? $patient->weight : '';
                 $ma_user['patientinfo']['height'] = (isset($patient->height) && $patient->height != '') ? $patient->height : '';
                 $ma_user['patientinfo']['BMI'] = (isset($patient->BMI) && $patient->BMI != '') ? $patient->BMI : '';
@@ -131,7 +131,7 @@ class UserController extends Controller {
                 $ma_user['practiceinfo']["description"] = $providers['description'];
                 $ma_user['practiceinfo']["language"] = $providers['Language'];
                 $ma_user['practiceinfo']["country"] = $providers['Country'];
-                $ma_user['practiceinfo']["photo"] = $providers['photo'];
+                $ma_user['practiceinfo']["photo"] = FunctionUtils::getProfilePicture($providers['photo']);
                 $ma_user['practiceinfo']["certificate"] = $providers['certificate']; 
                 $ma_user['practiceinfo']["specialty"] = $providers['specialty'];               
                 $ma_user['practiceinfo']["license"] = $providers['license'];
@@ -165,17 +165,7 @@ class UserController extends Controller {
         $rules['photo'] = 'image|mimes:jpg,jpeg,png|max:2048';
 
         $rules_msg['group_id.required'] = 'Please set user group';
-        $rules_msg['photo.max'] = "Profile picture size should be maximum 2MB";
-
-        if($request->has('group_id') && $request->get('group_id') == 100) {           
-            // $rules['user_id'] = 'required';
-            // $rules_msg['group_id.required'] = 'Please set user group';
-        }
-
-        if($request->has('group_id') && $request->get('group_id') == 2) {
-            // $rules['group_id'] = 'required';
-            // $rules_msg['group_id.required'] = 'Please set user group';   
-        }        
+        $rules_msg['photo.max'] = "Profile picture size should be maximum 2MB";               
 
         $validator = Validator::make($request->all(), $rules, $rules_msg);
         if ($validator->fails()) { 
@@ -184,56 +174,131 @@ class UserController extends Controller {
             return response()->json($return);
         }
 
+        // Update Patient Profile
         if($request->has('group_id') && $request->get('group_id') == 100) {
 
-            $patient = DB::table('demographics')->where('pid', '=', $user->id)->first();
-
             $data = array();
 
-            if ($request->hasFile("photo")) {
-                $file = $request->file('photo');                    
-                FunctionUtils::createDir('profile');
-                $oldfile = FunctionUtils::getProfileUploadPath() . $patient->photo;
-                if (is_file($oldfile)) {
-                    unlink($oldfile);
+            $data['firstname'] = $request->has('firstname') ? $request->get('firstname') : $user->firstname;            
+            $data['middle'] = $request->has('middle') ? $request->get('middle') : $user->middle;
+            $data['lastname'] = $request->has('lastname') ? $request->get('lastname') : $user->lastname;
+            $data['title'] = $request->has('title') ? $request->get('title') : $user->title;
+            $data['email'] = $request->has('email') ? $request->get('email') : $user->email;            
+            $user->update($data);            
+
+            $patient = DB::table('demographics')
+            ->where(function($query) use ($user) {
+                $query->where('firstname', '=',  $user->firstname)->orWhere('lastname', '=', $user->lastname);
+            })->first();
+
+            if($patient) {               
+            
+                $data['language'] = $request->has('language') ? $request->get('language') : $patient->language;
+                $data['sex'] = $request->has('sex') ? $request->get('sex') : $patient->sex;
+                $data['DOB'] = $request->has('dob') ? $request->get('dob') : $patient->DOB;               
+                $data['address'] = $request->has('address') ? $request->get('address') : $patient->address;
+                $data['city'] = $request->has('city') ? $request->get('city') : $patient->city;
+                $data['state'] = $request->has('state') ? $request->get('state') : $patient->state;
+                $data['zip'] = $request->has('zip') ? $request->get('zip') : $patient->zip;
+
+                if ($request->hasFile("photo")) {
+                    $file = $request->file('photo');                    
+                    FunctionUtils::createDir('profile');
+                    $oldfile = FunctionUtils::getProfileUploadPath() . $patient->photo;
+                    if (is_file($oldfile)) {
+                        unlink($oldfile);
+                    }
+                    if ($file_name = FunctionUtils::UploadFile($file, FunctionUtils::getProfileUploadPath())) {
+                        $data['photo'] = $file_name;
+                    }
                 }
-                if ($file_name = FunctionUtils::UploadFile($file, FunctionUtils::getProfileUploadPath())) {
-                    $data['photo'] = $file_name;
-                }
+
+                DB::table('demographics')
+                ->where(function($query) use ($user) {
+                    $query->where('firstname', '=',  $user->firstname)->orWhere('lastname', '=', $user->lastname);
+                })->update($data);
+                $this->audit('Update');                
             }
 
-            DB::table('demographics')->where('pid', '=', $user->id)->update($data);
+            $patient = DB::table('demographics')
+            ->where(function($query) use ($user) {
+                $query->where('firstname', '=',  $user->firstname)->orWhere('lastname', '=', $user->lastname);
+            })->first();
 
-            if($this->audit('Update')) {
-                $return['status'] = 1;
-                $return['message'] = 'Profile updated Successfully.';
-            }
+            $patientData['id'] = $user->id;
+            $patientData['firstname'] = $user->firstname;
+            $patientData['middle'] = $user->middle;
+            $patientData['lastname'] = $user->lastname;
+            $patientData['title'] = $user->title;
+            $patientData['email'] = $user->email;            
+            $patientData['language'] = (isset($patient) && $patient->language != '') ? $patient->language : '';
+            $patientData['sex'] = (isset($patient) && $patient->sex != '') ? ($patient->sex == 'm') ? 'Male' : ($patient->sex == 'f') ? 'Female' : '' : '';
+            $patientData['DOB'] = (isset($patient) && $patient->DOB != '') ? date('d-M-Y',strtotime($patient->DOB)) : '';
+            $patientData['address'] = (isset($patient) && $patient->address != '') ? $patient->address : '';
+            $patientData['city'] = (isset($patient) && $patient->city != '') ? $patient->city : '';
+            $patientData['state'] = (isset($patient) && $patient->state != '') ? $patient->state : '';
+            $patientData['zip'] = (isset($patient) && $patient->zip != '') ? $patient->zip : '';
+            $patientData['photo'] = (isset($patient) && $patient->photo != '') ? FunctionUtils::getProfilePicture($patient->photo) : '';
+
+            $return['status'] = 1;
+            $return['message'] = 'Profile updated Successfully.';
+            $return['data']['user'] = $patientData;
         }
 
+        // Update Provider Profile
         if($request->has('group_id') && $request->get('group_id') == 2) {
 
-            $provider = DB::table('providers')->where('providers.id', '=', $user->id)->first();
+            $user_data = $data = array();            
 
-            $data = array();
+            $user_data['firstname'] = $request->has('firstname') ? $request->get('firstname') : $user->firstname;            
+            $user_data['middle'] = $request->has('middle') ? $request->get('middle') : $user->middle;
+            $user_data['lastname'] = $request->has('lastname') ? $request->get('lastname') : $user->lastname;
+            $user_data['title'] = $request->has('title') ? $request->get('title') : $user->title;
+            $user_data['email'] = $request->has('email') ? $request->get('email') : $user->email;            
+            $user->update($user_data);
 
-            if ($request->hasFile("photo")) {
-                $file = $request->file('photo');                    
-                FunctionUtils::createDir('profile');
-                $oldfile = FunctionUtils::getProfileUploadPath() . $provider->photo;
-                if (is_file($oldfile)) {
-                    unlink($oldfile);
+            $provider = DB::table('providers')->where('providers.id', '=', $user->id)->first();            
+
+            if($provider) {
+
+                $data['language'] = $request->has('language') ? $request->get('language') : $provider->language;
+                $data['description'] = $request->has('description') ? $request->get('description') : $provider->description;
+                $data['specialty'] = $request->has('specialty') ? $request->get('specialty') : $provider->specialty;
+                $data['license'] = $request->has('license') ? $request->get('license') : $provider->license;
+                $data['license_state'] = $request->has('license_state') ? $request->get('license_state') : $provider->license_state;
+                $data['npi'] = $request->has('npi') ? $request->get('npi') : $provider->npi;                
+                $data['dea'] = $request->has('dea') ? $request->get('dea') : $provider->dea;
+                $data['medicare'] = $request->has('medicare') ? $request->get('medicare') : $provider->medicare;
+                $data['tax_id'] = $request->has('tax_id') ? $request->get('tax_id') : $provider->tax_id;                
+                $data['schedule_increment'] = $request->has('schedule_increment') ? $request->get('schedule_increment') : $provider->schedule_increment;
+                $data['timeslotsperhour'] = $request->has('timeslotsperhour') ? $request->get('timeslotsperhour') : $provider->timeslotsperhour;                
+
+                if ($request->hasFile("photo")) {
+                    $file = $request->file('photo');                    
+                    FunctionUtils::createDir('profile');
+                    $oldfile = FunctionUtils::getProfileUploadPath() . $provider->photo;
+                    if (is_file($oldfile)) {
+                        unlink($oldfile);
+                    }
+                    if ($file_name = FunctionUtils::UploadFile($file, FunctionUtils::getProfileUploadPath())) {
+                        $data['photo'] = $file_name;
+                    }
                 }
-                if ($file_name = FunctionUtils::UploadFile($file, FunctionUtils::getProfileUploadPath())) {
-                    $data['photo'] = $file_name;
-                }
+
+                DB::table('providers')->where('providers.id', '=', $user->id)->update($data);
+                $this->audit('Update');
             }
 
-            DB::table('providers')->where('providers.id', '=', $user->id)->update($data);
+            $providerData = DB::table('users')                
+                ->select('users.id','users.firstname','users.middle','users.lastname','users.title','users.email','providers.Language as language', 'providers.description','providers.specialty','providers.license','providers.license_state','providers.npi','providers.dea','providers.medicare','providers.tax_id','providers.schedule_increment','providers.timeslotsperhour',DB::raw('IF(providers.photo != "", CONCAT("'.FunctionUtils::getProfileUploadUrl().'", providers.photo),"") as photo'))
+                ->leftJoin('providers', 'providers.id', '=', 'users.id')                
+                ->where('users.id', $user->id)->first();
 
-            if($this->audit('Update')) {
-                $return['status'] = 1;
-                $return['message'] = 'Profile updated Successfully.';
-            }
+                //echo $providerData;
+
+            $return['status'] = 1;
+            $return['message'] = 'Profile updated Successfully.';
+            $return['data']['user'] = $providerData;
         }
 
         return  Response::json($return);
@@ -301,6 +366,8 @@ class UserController extends Controller {
                 }
                 $patient->DOB = date('d-M-Y',strtotime($patient->DOB));
                 $patient->title = $patient->lastname.', '.$patient->firstname.' (DOB: '.date('d-M-Y',strtotime($patient->DOB)).') (ID: '.$patient->pid.')';
+
+                $patient->photo = FunctionUtils::getProfilePicture($patient->photo);
             }
 
             $return['status'] = 1;            
@@ -326,7 +393,7 @@ class UserController extends Controller {
 
         $providers = DB::table('users')
         ->leftJoin('providers', 'providers.id', '=', 'users.id')
-        ->select('users.id', 'users.username', 'users.email', 'users.displayname' ,'users.firstname', 'users.lastname', 'providers.description','providers.specialty', 'providers.Language as language','providers.Country as country','providers.photo','providers.certificate','providers.license','providers.license_state','providers.npi','providers.dea','providers.medicare','providers.tax_id','providers.schedule_increment AS increment_for_schedule_minuntes','providers.timeslotsperhour','practiceinfo.minTime','practiceinfo.maxTime','practiceinfo.weekends','practiceinfo.timezone','practiceinfo.sun_o','practiceinfo.sun_c','practiceinfo.mon_o','practiceinfo.mon_c','practiceinfo.tue_o','practiceinfo.tue_c','practiceinfo.wed_o','practiceinfo.wed_c','practiceinfo.thu_o','practiceinfo.thu_c','practiceinfo.fri_o','practiceinfo.fri_c','practiceinfo.sat_o','practiceinfo.sat_c')
+        ->select('users.id', 'users.username', 'users.email', 'users.displayname' ,'users.firstname', 'users.lastname', 'providers.description','providers.specialty', 'providers.Language as language','providers.Country as country',DB::raw('IF(providers.photo != "", CONCAT("'.FunctionUtils::getProfileUploadUrl().'", providers.photo),"") as photo'),'providers.certificate','providers.license','providers.license_state','providers.npi','providers.dea','providers.medicare','providers.tax_id','providers.schedule_increment AS increment_for_schedule_minuntes','providers.timeslotsperhour','practiceinfo.minTime','practiceinfo.maxTime','practiceinfo.weekends','practiceinfo.timezone','practiceinfo.sun_o','practiceinfo.sun_c','practiceinfo.mon_o','practiceinfo.mon_c','practiceinfo.tue_o','practiceinfo.tue_c','practiceinfo.wed_o','practiceinfo.wed_c','practiceinfo.thu_o','practiceinfo.thu_c','practiceinfo.fri_o','practiceinfo.fri_c','practiceinfo.sat_o','practiceinfo.sat_c')
         ->leftJoin('practiceinfo', 'practiceinfo.practice_id', '=', 'users.practice_id')
         ->where('users.group_id', '=', 2)
         ->where('users.active', '=', 1);
