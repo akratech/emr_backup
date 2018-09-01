@@ -33,7 +33,7 @@
 
 @section('content')
 
-<div class="wrapper" onload="my_init()">
+<div class="wrapper">
 			<h2 class="white">Online Video Conference with Dr. dev</h2>
 
 			<div class="row">
@@ -136,5 +136,6 @@
         }
         window.onresize = autoResizeDiv;
         autoResizeDiv();
+        my_init();
     </script>
     @endsection
