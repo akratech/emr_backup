@@ -45,7 +45,7 @@ class CommunicationController extends Controller {
         
         $data['title'] = Session::get('ptname');
         if(Auth::user()->group_id == 2){
-            $data['urname'] = Session::get('pid');
+            $data['urname'] = Session::get('ptname');
             $data['myname'] = Auth::user()->username;
 //            $data['urname'] = "ppp";
 //            $data['myname'] = "aaa";
@@ -53,7 +53,7 @@ class CommunicationController extends Controller {
             $provide_id = Session::get('provider_id');
             $provider = DB::table('users')->where('id',$provide_id)->first();
             $data['urname'] = $provider->username;
-            $data['myname'] = Session::get('pid');
+            $data['myname'] = Session::get('ptname');
 //            $data['urname'] = 'aaa';
 //            $data['myname'] = 'ppp';
         }
