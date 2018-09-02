@@ -229,8 +229,8 @@
         });
         $('#calendar').fullCalendar({
             weekends: noshdata.weekends,
-            minTime: '00:00:00',
-            maxTime: '24:00:00',
+            minTime: noshdata.minTime,
+            maxTime: noshdata.maxTime,
             allDayDefault: false,
             slotDuration: '00:15:00',
             defaultView: 'agendaDay',
