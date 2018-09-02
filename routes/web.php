@@ -122,6 +122,7 @@ Route::get('print_orders/{id}/{pid}/{download?}', ['as' => 'print_orders', 'uses
 Route::get('print_queue/{action}/{id}/{pid}/{subtype?}', ['as' => 'print_queue', 'uses' => 'CoreController@print_queue']);
 Route::any('restore_backup', ['as' => 'restore_backup', 'uses' => 'CoreController@restore_backup']);
 Route::get('set_patient/{pid}', ['as' => 'set_patient', 'uses' => 'CoreController@set_patient']);
+Route::get('set_patient2/{pid}/{appid}', ['as' => 'set_patient2', 'uses' => 'CoreController@set_patient2']);
 Route::get('schedule_provider_exceptions/{type}', ['as' => 'schedule_provider_exceptions', 'uses' => 'CoreController@schedule_provider_exceptions']);
 Route::get('schedule_visit_types/{type}', ['as' => 'schedule_visit_types', 'uses' => 'CoreController@schedule_visit_types']);
 Route::get('setup', ['as' => 'setup', 'uses' => 'CoreController@setup']);

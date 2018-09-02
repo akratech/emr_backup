@@ -34,7 +34,12 @@
 @section('content')
 
 <div class="wrapper">
-			<h2 class="white">Online Video Conference with Dr. dev</h2>
+                        @if(Session::get('group_id') == 2)
+                        <h2 class="white">Online Video Conference with Patient {{$title or ''}}</h2>
+                        @else
+                        <h2 class="white">Online Video Conference with Dr. </h2>
+                        @endif
+			
 
 			<div class="row">
 
@@ -124,18 +129,25 @@
 <iframe id="full-screen-me" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%" src={{ route('patient2') }}></iframe>
 @endsection
 @section('view.scripts')
-	<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script>
+var myroom = "{{$room or ''}}";
+var myname = "{{$myname or ''}}";
+var urnamme = "{{$urname or ''}}";
+</script>
+<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="{{asset('assets/js/rtc/socket.io.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/js/rtc/easyrtc.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/js/rtc/main.js')}}" type="text/javascript"></script>
 <script language="javascript">
-        function autoResizeDiv()
-        {
-            document.getElementById('full-screen-me').style.height = window.innerHeight +'px';
-
-        }
-        window.onresize = autoResizeDiv;
-        autoResizeDiv();
-        my_init();
-    </script>
-    @endsection
+    function autoResizeDiv()
+    {
+        document.getElementById('full-screen-me').style.height = window.innerHeight +'px';
+        
+    }
+    window.onresize = autoResizeDiv;
+    autoResizeDiv();
+    my_init();
+    var oTxt = document.getElementById('main');
+        oTxt.focus();
+</script>
+@endsection

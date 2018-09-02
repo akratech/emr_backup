@@ -5840,6 +5840,12 @@ class CoreController extends Controller
         $this->setpatient($pid);
         return redirect()->route('patient');
     }
+    
+    public function set_patient2(Request $request, $pid, $apptid)
+    {
+        $this->setpatient($pid,$apptid);
+        return redirect()->route('init_conference');
+    }
 
     public function setup(Request $request)
     {

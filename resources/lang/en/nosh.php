@@ -228,6 +228,7 @@ return [
     // Schedule
     "new_appointment" => "New Appointment",
     "edit_appointment" => "Edit Appointment",
+    "view_appointment" => "View Appointment",
     "patient_not_selected" => "Patient has not been selected.  Try again",
     "timezone" => "Timezone not set. Automatically set based on your browser location",
     "choose_appt" => "Choose appointment to associate encounter!",

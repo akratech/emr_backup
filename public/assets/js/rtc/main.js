@@ -30,18 +30,32 @@ var QueryString = function () {
         return false;
     }
 }();
-
-if (QueryString.room) {
-    room_name = QueryString.room;
-}
-if (QueryString.uname) {
-    myName = QueryString.room;
-}
-if (QueryString.pname) {
-    partnerName = QueryString.pname;
+//if (QueryString.room) {
+//    room_name = QueryString.room;
+//}
+//if (myroom) {
+    room_name = myroom;
+//    QueryString.room = myroom;
+//}
+//if (QueryString.uname) {
+//    myName = QueryString.room;
+//}
+//if (myname) {
+    myName = myname;
+//    QueryString.uname = myname;
+//}
+//if (QueryString.pname) {
+//    partnerName = QueryString.pname;
+//    document.getElementById('partnerName').innerText=partnerName;
+//}
+//if (urnamme) {
+    partnerName = urnamme;
+//    QueryString.pname = urnamme;
     document.getElementById('partnerName').innerText=partnerName;
-}
-
+//}
+console.log(room_name);
+console.log(myName);
+console.log(partnerName);
 easyrtc.setSocketUrl("//media.mobihealthinternational.com:8443");
 easyrtc.enableDebug(false);
 easyrtc.setOnError(function (errEvent) {

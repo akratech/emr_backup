@@ -15970,7 +15970,7 @@ class Controller extends BaseController
     * @param string  $pid - patient id
     * @return Response
     */
-    protected function setpatient($pid)
+    protected function setpatient($pid,$apptid = null)
     {
         $row = DB::table('demographics')->where('pid', '=', $pid)->first();
         $date = Date::parse($row->DOB);
@@ -15989,6 +15989,9 @@ class Controller extends BaseController
         Session::put('age', ucwords($age_arr[0] . ' Old'));
         Session::put('agealldays', $date->diffInDays(Date::now()));
         Session::put('ptname', $row->firstname . ' ' . $row->lastname);
+        if(isset($apptid)){
+            Session::put('apptid', $apptid);
+        }
         $history = [];
         if (Session::has('history_pid')) {
             $history = Session::get('history_pid');

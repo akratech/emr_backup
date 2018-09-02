@@ -187,7 +187,7 @@
                             </li>
                         @endif
                         <li class="sidebar-search">
-                            <form class="nosh-form" role="form" method="POST" action="{{ route('search_chart') }}">
+                            <form class="nosh-form2" role="form" method="POST" action="{{ route('search_chart') }}">
                                 {{ csrf_field() }}
                                 <div class="input-group custom-search-form">
                                     <input type="text" name="search_chart" class="form-control" placeholder="{{ trans('nosh.search_chart') }}">
@@ -605,6 +605,7 @@
             'logout_url': '<?php echo url("logout"); ?>',
             'notification': '<?php echo url("notification"); ?>',
             'patient_url': '<?php echo url("patient"); ?>',
+            'set_patient2': '<?php echo url("set_patient2"); ?>',
             'practice_logo': '<?php echo url("practice_logo_login"); ?>',
             'progress': '<?php echo url("progress"); ?>',
             'provider_schedule': '<?php echo url("provider_schedule"); ?>',

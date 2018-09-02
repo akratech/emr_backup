@@ -173,7 +173,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-11 col-md-offset-1">
+                            <div class="col-md-11 col-md-offset-1 actions">
+                                <span class="start_video">
+                                    
+                                </span>
                                 <button type="submit" class="btn btn-success" style="margin:10px">
                                     <i class="fa fa-btn fa-save"></i> Save
                                 </button>
@@ -290,7 +293,7 @@
                         $('.nosh-event').hide();
                         $('.nosh-appt').show();
                         $('#event_encounter').show();
-                        $('#eventModal_title').text('{{ trans('nosh.edit_appointment') }}');
+                        $('#eventModal_title').text('{{ trans('nosh.view_appointment') }}');
                         $('#patient_name').text(calEvent.title);
                         $('#end').val('');
                         $('#end').prop('required', false);
@@ -318,6 +321,8 @@
                     $('#status').val(calEvent.status);
                     $('#notes').val(calEvent.notes);
                     if (calEvent.editable !== false) {
+                        $('.actions button[type="submit"]').hide();
+                        $('.actions .start_video').html("<button type='button' class='btn btn-success' id='event_video'>Start Video</button>");
                         $('#event_id_div').show();
                         $('#pid_div').show();
                         $('#eventModal').modal('show');
@@ -444,6 +449,11 @@
         $('#event_encounter').css('cursor', 'pointer').click(function() {
             var appt_id = $("#event_id").val();
             window.location = noshdata.event_encounter + '/' + appt_id;
+        });
+        $(document).on('click','#eventModal #event_video',function() {
+            var pid = $("#pid").val();
+            var appt_id = $("#event_id").val();
+            window.location = noshdata.set_patient2 + '/' + pid + '/' + appt_id;
         });
         $('#event_cancel').css('cursor', 'pointer').click(function() {
             $('#event_form').clearForm();

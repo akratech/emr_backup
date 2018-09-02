@@ -23,6 +23,7 @@ use Schema;
 use Session;
 use SoapBox\Formatter\Formatter;
 use URL;
+use Illuminate\Support\Facades\Auth;
 
 class CommunicationController extends Controller {
 
@@ -36,6 +37,30 @@ class CommunicationController extends Controller {
     }
     
     public function init_conference(){
+        $next_appt = DB::table('schedule')->where('pid', '=', Session::get('pid'))->where('appt_id', '=', Session::get('apptid'))->where('start', '<', time())->where('end', '>', time())->first();
+        if(!isset($next_appt)){
+            Session::put('message_action', 'Error - Visit Valid appointment!');
+            return redirect('patient')->with('message_action','Error - Visit Valid appointment!');
+        }
+        
+        $data['title'] = Session::get('ptname');
+        if(Auth::user()->group_id == 2){
+            $data['urname'] = Session::get('pid');
+            $data['myname'] = Auth::user()->username;
+//            $data['urname'] = "ppp";
+//            $data['myname'] = "aaa";
+        }else{
+            $provide_id = Session::get('provider_id');
+            $provider = DB::table('users')->where('id',$provide_id)->first();
+            $data['urname'] = $provider->username;
+            $data['myname'] = Session::get('pid');
+//            $data['urname'] = 'aaa';
+//            $data['myname'] = 'ppp';
+        }
+        
+        
+        $data['room'] = md5(Session::get('pid'));
+        $data['pid'] = Session::get('pid');
         $data['assets_js'] = $this->assets_js('chart');
         $data['assets_css'] = $this->assets_css('chart');
         return view('communication', $data);
