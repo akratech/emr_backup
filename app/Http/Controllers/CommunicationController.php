@@ -37,11 +37,11 @@ class CommunicationController extends Controller {
     }
     
     public function init_conference(){
-        $next_appt = DB::table('schedule')->where('pid', '=', Session::get('pid'))->where('appt_id', '=', Session::get('apptid'))->where('start', '<', time())->where('end', '>', time())->first();
-        if(!isset($next_appt)){
-            Session::put('message_action', 'Error - Visit Valid appointment!');
-            return redirect('patient')->with('message_action','Error - Visit Valid appointment!');
-        }
+//        $next_appt = DB::table('schedule')->where('pid', '=', Session::get('pid'))->where('appt_id', '=', Session::get('apptid'))->where('start', '<', time())->where('end', '>', time())->first();
+//        if(!isset($next_appt)){
+//            Session::put('message_action', 'Error - Visit Valid appointment!');
+//            return redirect('patient')->with('message_action','Error - Visit Valid appointment!');
+//        }
         
         $data['title'] = Session::get('ptname');
         if(Auth::user()->group_id == 2){

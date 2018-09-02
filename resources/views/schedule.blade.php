@@ -229,8 +229,8 @@
         });
         $('#calendar').fullCalendar({
             weekends: noshdata.weekends,
-            minTime: noshdata.minTime,
-            maxTime: noshdata.maxTime,
+            minTime: '00:00:00',
+            maxTime: '24:00:00',
             allDayDefault: false,
             slotDuration: '00:15:00',
             defaultView: 'agendaDay',
@@ -321,8 +321,13 @@
                     $('#status').val(calEvent.status);
                     $('#notes').val(calEvent.notes);
                     if (calEvent.editable !== false) {
-                        $('.actions button[type="submit"]').hide();
-                        $('.actions .start_video').html("<button type='button' class='btn btn-success' id='event_video'>Start Video</button>");
+                        var start_date =  moment(calEvent.start.format('YYYY-MM-DD hh:mm:ss')).subtract(1, 'hours').format('YYYY-MM-DD hh:mm:ss');
+                        var end_date = calEvent.end.format('YYYY-MM-DD hh:mm:ss');
+                        var current_date = new Date();
+                        if(moment(current_date).isBetween(moment(start_date),moment(end_date))){
+                            $('.actions button[type="submit"]').hide();
+                            $('.actions .start_video').html("<button type='button' class='btn btn-success' id='event_video'>Start Video</button>");
+                        }
                         $('#event_id_div').show();
                         $('#pid_div').show();
                         $('#eventModal').modal('show');
