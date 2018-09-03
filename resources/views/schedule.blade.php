@@ -321,10 +321,10 @@
                     $('#status').val(calEvent.status);
                     $('#notes').val(calEvent.notes);
                     if (calEvent.editable !== false) {
-                        var start_date =  moment(calEvent.start.format('YYYY-MM-DD hh:mm:ss')).subtract(1, 'hours').format('YYYY-MM-DD hh:mm:ss');
-                        var end_date = calEvent.end.format('YYYY-MM-DD hh:mm:ss');
+                        var start_date =  moment(calEvent.start.format('YYYY-MM-DD HH:mm:ss')).subtract(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
+                        var end_date = moment(calEvent.end.format('YYYY-MM-DD HH:mm:ss')).format('YYYY-MM-DD HH:mm:ss');
                         var current_date = new Date();
-                        if(moment(current_date).isBetween(moment(start_date),moment(end_date))){
+                        if(moment().isBetween(moment(start_date,'YYYY-MM-DD HH:mm:ss'),moment(end_date,'YYYY-MM-DD HH:mm:ss'),'second',true)){
                             $('.actions button[type="submit"]').hide();
                             $('.actions .start_video').html("<button type='button' class='btn btn-success' id='event_video'>Start Video</button>");
                         }
