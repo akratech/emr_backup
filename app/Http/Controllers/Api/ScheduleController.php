@@ -34,20 +34,20 @@ class ScheduleController extends Controller
 		$return = array('status' => 0, 'message' => '', 'data' => array());
 
 		$validator = Validator::make($request->all(), [
-            'start_date' => 'required',
-            'end_end' => 'required',
-            'provider_id' => 'required',
-        ],[
-        	'start_date.required' => 'Please select start date',
-            'end_end.required' => 'Please select end date',
-            'provider_id.required' => 'Invalid provider',
-        ]);
+			'start_date' => 'required',
+			'end_end' => 'required',
+			'provider_id' => 'required',
+		],[
+			'start_date.required' => 'Please select start date',
+			'end_end.required' => 'Please select end date',
+			'provider_id.required' => 'Invalid provider',
+		]);
 
-        if ($validator->fails()) { 
+		if ($validator->fails()) { 
 			$return['error'] = $validator->errors()->toArray();
 			$return['message'] = 'Validation Error Occurred';
-        	return response()->json($return);
-        }        
+			return response()->json($return);
+		}        
 
 		$start = strtotime($request->get('start_date'));
 		$end = strtotime($request->get('end_end'));
@@ -73,26 +73,26 @@ class ScheduleController extends Controller
 				} else {
 					$pid = $row->pid;
 					$patients_info = DB::table('demographics')
-		            ->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')
-		            ->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
-		            ->where('demographics.pid', $pid)->first();
+					->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')
+					->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
+					->where('demographics.pid', $pid)->first();
 
-		            if(isset($patients_info) && !empty($patients_info)) {
+					if(isset($patients_info) && !empty($patients_info)) {
 
-			            if($patients_info->sex == 'm') { 
-		                    $patients_info->sex = "Male";
-		                }
-		                if($patients_info->sex == 'f') { 
-		                    $patients_info->sex = "Female"; 
-		                }
-		                $patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
-		                $patients_info->title = $patients_info->lastname.', '.$patients_info->firstname.' (DOB: '.date('d-M-Y',strtotime($patients_info->DOB)).') (ID: '.$patients_info->pid.')';
-		                $patients_info->photo = FunctionUtils::getProfilePicture($patients_info->photo);
-		                
-		            } else {
-		            	$patients_info = '';
-		            }
-	                
+						if($patients_info->sex == 'm') { 
+							$patients_info->sex = "Male";
+						}
+						if($patients_info->sex == 'f') { 
+							$patients_info->sex = "Female"; 
+						}
+						$patients_info->DOB = date('d-M-Y',strtotime($patients_info->DOB));
+						$patients_info->title = $patients_info->lastname.', '.$patients_info->firstname.' (DOB: '.date('d-M-Y',strtotime($patients_info->DOB)).') (ID: '.$patients_info->pid.')';
+						$patients_info->photo = FunctionUtils::getProfilePicture($patients_info->photo);
+
+					} else {
+						$patients_info = '';
+					}
+
 				}
 				if ($row->timestamp == '0000-00-00 00:00:00' || $row->user_id == '') {
 					$timestamp = '';					
@@ -407,229 +407,246 @@ class ScheduleController extends Controller
 
 		$return = array('status' => 0, 'message' => '', 'data' => array());
 
-		$validator = Validator::make($request->all(), [			
+		$fields = [			
 			'provider_id' => 'required',
 			'reason' => 'required',	
 			'title' => 'required',						
 			'start_date' => 'required',
 			'start_time' => 'required',
-            'end_time' => 'required',
-        ],[
-        	'provider_id.required' => 'Invalid provider',
+			'end_time' => 'required',
+		];
+
+		$fields_validation = [
+			'provider_id.required' => 'Invalid provider',
 			'reason.required' => 'Please enter reason',	
 			'title.required' => 'Please enter title',						
 			'start_date.required' => 'Please select star date',
 			'start_time.required' => 'Please select start time',
-            'end_time.required' => 'Please select end time',
-        ]);
+			'end_time.required' => 'Please select end time',
+		];
+		if ($user->group_id == '100') {
+			unset($fields['title']);
+			unset($fields_validation['title.required']);
+		}
+		$validator = Validator::make($request->all(), $fields , $fields_validation);
 
-        if ($validator->fails()) {
-        	$return['error'] = $validator->errors()->toArray();
+		if ($validator->fails()) {
+			$return['error'] = $validator->errors()->toArray();
 			$return['message'] = 'Validation Error Occurred';
-        	return response()->json($return);
-        }
+			return response()->json($return);
+		}
 
-        if ($user->group_id == '100') {        	
-            $pid = $user->id;
-            $row1 = DB::table('demographics')->where('pid', '=', $pid)->first();
-            $title = $row1->lastname . ', ' . $row1->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row1->DOB)) . ') (ID: ' . $pid . ')';
-        } else {    
-            $pid = $request->get('pid');
-            if ($pid == '' || $pid == '0') {
-                $title = $request->get('reason');
-            } else {
-                $title = $request->get('title');
-            }
-        }
+		if ($user->group_id == '100') {
+			$pid = $user->id;
+			$row1 = DB::table('demographics')            
+			->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')
+			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+			->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
+			->where('demographics_relate.practice_id', '=', $user->practice_id)
+			->where(function($query_array1) use ($user) {
+				$query_array1->where('demographics.firstname', '=',  $user->firstname)
+				->orWhere('demographics.lastname', '=', $user->lastname);
+			})
+			->first();
 
-        $start = strtotime($request->get('start_date') . " " . $request->get('start_time'));
-        if ($pid == '' || $pid == '0') {        	
-            $end = strtotime($request->get('start_date') . " " . $request->get('end_time'));
-            $visit_type = '';
-        } else {
-            $visit_type = $request->get('visit_type');
-            $row = DB::table('calendar')
-                ->select('duration')
-                ->where('visit_type', '=', $visit_type)
-                ->where('active', '=', 'y')
-                ->where('practice_id', '=', $user->practice_id)
-                ->first();                
-            $end = $start + $row->duration;
-        }
+			$title = $row1->lastname . ', ' . $row1->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row1->DOB)) . ') (ID: ' . $pid . ')';
+		} else {    
+			$pid = $request->get('pid');
+			if ($pid == '' || $pid == '0') {
+				$title = $request->get('reason');
+			} else {
+				$title = $request->get('title');
+			}
+		}
 
-        $provider_id = $request->get('provider_id');
-        $reason = $request->get('reason');
-        $id = $request->get('event_id');
-        $repeat = $request->get('repeat');
+		$start = strtotime($request->get('start_date') . " " . $request->get('start_time'));
+		if ($pid == '' || $pid == '0') {        	
+			$end = strtotime($request->get('start_date') . " " . $request->get('end_time'));
+			$visit_type = '';
+		} else {
+			$visit_type = $request->get('visit_type');
+			$row = DB::table('calendar')
+			->select('duration')
+			->where('visit_type', '=', $visit_type)
+			->where('active', '=', 'y')
+			->where('practice_id', '=', $user->practice_id)
+			->first();                
+			$end = $start + $row->duration;
+		}
 
-        if ($id == '') {        	
-            if ($user->group_id == '100') {            	
-                $status = 'Pending';
-            } else {
-                if ($pid == '' || $pid == '0') {
-                    $status = '';
-                } else {
-                    $status = 'Pending';
-                }
-            }
-        } else {
-            $status = $request->get('status');
-        }        
+		$provider_id = $request->get('provider_id');
+		$reason = $request->get('reason');
+		$id = $request->get('event_id');
+		$repeat = $request->get('repeat');
 
-        if ($repeat != '') {
+		if ($id == '') {        	
+			if ($user->group_id == '100') {            	
+				$status = 'Pending';
+			} else {
+				if ($pid == '' || $pid == '0') {
+					$status = '';
+				} else {
+					$status = 'Pending';
+				}
+			}
+		} else {
+			$status = $request->get('status');
+		}        
 
-            $repeat_day1 = date('l', $start);
-            $repeat_day = strtolower($repeat_day1);
-            $repeat_start_time = date('h:ia', $start);
-            $repeat_end_time = date('h:ia', $end);
-            if ($request->get('until') != '') {
-                $until = strtotime($request->get('until'));
-            } else {
-                $until = '0';
-            }
-            $data1 = [
-                'repeat_day' => $repeat_day,
-                'repeat_start_time' => $repeat_start_time,
-                'repeat_end_time' => $repeat_end_time,
-                'repeat' => $repeat,
-                'until' => $until,
-                'title' => $title,
-                'reason' => $reason,
-                'provider_id' => $provider_id,
-                'start' => $start
-            ];
-            if ($id == '') {
-                DB::table('repeat_schedule')->insert($data1);
-                $this->audit('Add');
-                $return['status'] = 1;
-                $return['message'] = 'Repeated event added.';
-            } else {
-                $id_check = strpbrk($id, 'N');
-                if ($id_check == TRUE) {
-                    $nid = str_replace('N', '', $id);
-                    DB::table('repeat_schedule')->insert($data1);
-                    $this->audit('Add');
-                    DB::table('schedule')->where('appt_id', '=', $nid)->delete();
-                    $this->audit('Delete');
-                    $return['status'] = 1;
-                    $return['message'] = 'Repeated event updated.';
-                } else {
-                    $rid = str_replace('R', '', $id);
-                    DB::table('repeat_schedule')->where('repeat_id', '=', $rid)->update($data1);
-                    $this->audit('Update');
-                    $return['status'] = 1;
-                    $return['message'] = 'Repeated event updated.';
-                }
-            }
+		if ($repeat != '') {
 
-            $return['data'] = $data1;
-        } else {
+			$repeat_day1 = date('l', $start);
+			$repeat_day = strtolower($repeat_day1);
+			$repeat_start_time = date('h:ia', $start);
+			$repeat_end_time = date('h:ia', $end);
+			if ($request->get('until') != '') {
+				$until = strtotime($request->get('until'));
+			} else {
+				$until = '0';
+			}
+			$data1 = [
+				'repeat_day' => $repeat_day,
+				'repeat_start_time' => $repeat_start_time,
+				'repeat_end_time' => $repeat_end_time,
+				'repeat' => $repeat,
+				'until' => $until,
+				'title' => $title,
+				'reason' => $reason,
+				'provider_id' => $provider_id,
+				'start' => $start
+			];
+			if ($id == '') {
+				DB::table('repeat_schedule')->insert($data1);
+				$this->audit('Add');
+				$return['status'] = 1;
+				$return['message'] = 'Repeated event added.';
+			} else {
+				$id_check = strpbrk($id, 'N');
+				if ($id_check == TRUE) {
+					$nid = str_replace('N', '', $id);
+					DB::table('repeat_schedule')->insert($data1);
+					$this->audit('Add');
+					DB::table('schedule')->where('appt_id', '=', $nid)->delete();
+					$this->audit('Delete');
+					$return['status'] = 1;
+					$return['message'] = 'Repeated event updated.';
+				} else {
+					$rid = str_replace('R', '', $id);
+					DB::table('repeat_schedule')->where('repeat_id', '=', $rid)->update($data1);
+					$this->audit('Update');
+					$return['status'] = 1;
+					$return['message'] = 'Repeated event updated.';
+				}
+			}
 
-            $data = [            
-            	'appt_id' => $id,
-                'pid' => $pid,
-                'start' => $start,
-                'end' => $end,
-                'title' => $title,
-                'visit_type' => $visit_type,
-                'reason' => $reason,
-                'status' => $status,
-                'provider_id' => $provider_id,
-                'user_id' => $user->id,
-            ];
+			$return['data'] = $data1;
+		} else {
 
-            if ($user->group_id != '100') {
-                $data['notes'] = $request->get('notes');
-            }
+			$data = [            
+				'appt_id' => $id,
+				'pid' => $pid,
+				'start' => $start,
+				'end' => $end,
+				'title' => $title,
+				'visit_type' => $visit_type,
+				'reason' => $reason,
+				'status' => $status,
+				'provider_id' => $provider_id,
+				'user_id' => $user->id,
+			];
 
-            if ($id == '') {
+			if ($user->group_id != '100') {
+				$data['notes'] = $request->get('notes');
+			}
 
-                $appt_id = DB::table('schedule')->insertGetId($data);
-                $this->audit('Add');
+			if ($id == '') {
 
-                if ($pid != '0' && $pid !== '') {                	
-                    /*$this->schedule_notification($appt_id);*/                    
-                }               
+				$appt_id = DB::table('schedule')->insertGetId($data);
+				$this->audit('Add');
+
+				if ($pid != '0' && $pid !== '') {                	
+					/*$this->schedule_notification($appt_id);*/                    
+				}               
 
 
-                $data['appt_id'] = $appt_id;
-                $start_date = $data['start'];
-                $end_date = $data['end'];
-                $data['start'] = date('d-M-Y H:i:s', $data['start']);
-                $data['end'] = date('d-M-Y H:i:s', $data['end']);
-                $data['start_date'] = date('d-M-Y', $start_date);
-                $data['start_time'] = date('H:i:s', $start_date);
-                $data['end_date'] = date('d-M-Y', $end_date);
-                $data['end_time'] = date('H:i:s', $end_date);
+				$data['appt_id'] = $appt_id;
+				$start_date = $data['start'];
+				$end_date = $data['end'];
+				$data['start'] = date('d-M-Y H:i:s', $data['start']);
+				$data['end'] = date('d-M-Y H:i:s', $data['end']);
+				$data['start_date'] = date('d-M-Y', $start_date);
+				$data['start_time'] = date('H:i:s', $start_date);
+				$data['end_date'] = date('d-M-Y', $end_date);
+				$data['end_time'] = date('H:i:s', $end_date);
 
-                $return['status'] = 1;
-                $return['message'] = 'Appointment/Event added.';
-               
-            } else {
-                $id_check1 = strpbrk($id, 'NR');
-                if ($id_check1 == TRUE) {
-                    $nid1 = str_replace('NR', '', $id);
-                    DB::table('schedule')->insert($data);
-                    $this->audit('Add');
-                    DB::table('repeat_schedule')->where('repeat_id', '=', $nid1)->delete();
-                    $this->audit('Delete');
-                    $return['status'] = 1;
-                    $return['message'] = 'Event updated.';
-                } else {
-                    $notify = DB::table('schedule')->where('appt_id', '=', $id)->first();
-                    if($notify) {
-	                    DB::table('schedule')->where('appt_id', '=', $id)->update($data);
-	                    $this->audit('Update');
-	                    if ($notify->start != $start && $notify->end != $end) {
-	                        if ($pid != '0' && $pid !== '') {
+				$return['status'] = 1;
+				$return['message'] = 'Appointment/Event added.';
+
+			} else {
+				$id_check1 = strpbrk($id, 'NR');
+				if ($id_check1 == TRUE) {
+					$nid1 = str_replace('NR', '', $id);
+					DB::table('schedule')->insert($data);
+					$this->audit('Add');
+					DB::table('repeat_schedule')->where('repeat_id', '=', $nid1)->delete();
+					$this->audit('Delete');
+					$return['status'] = 1;
+					$return['message'] = 'Event updated.';
+				} else {
+					$notify = DB::table('schedule')->where('appt_id', '=', $id)->first();
+					if($notify) {
+						DB::table('schedule')->where('appt_id', '=', $id)->update($data);
+						$this->audit('Update');
+						if ($notify->start != $start && $notify->end != $end) {
+							if ($pid != '0' && $pid !== '') {
 								/* $this->schedule_notification($id); */
-	                        }
-	                    }
-	                    $return['status'] = 1;
-	                    $return['message'] = 'Appointment updated.';
-	                }
-                }
-            }
+							}
+						}
+						$return['status'] = 1;
+						$return['message'] = 'Appointment updated.';
+					}
+				}
+			}
 
-            $return['data'] = $data;
-        }
+			$return['data'] = $data;
+		}
 
-        
 
-        return  Response::json($return);
-    }
 
-    public function deleteSchedule(Request $request) {
+		return  Response::json($return);
+	}
 
-    	$return = array('status' => 0, 'message' => 'Schedule Could not deleted', 'data' => array());	
+	public function deleteSchedule(Request $request) {
 
-    	if($request->has('$') && $request->get('schedule_id') != '') {
+		$return = array('status' => 0, 'message' => 'Schedule Could not deleted', 'data' => array());	
 
-    		$schedule_id = $request->get('schedule_id');
-	        $id_check = strpbrk($schedule_id, 'R');
-	        if ($id_check == false) {
-	            $schedule = DB::table('schedule')->where('appt_id', '=', $schedule_id);
-	            if($schedule->delete()) {
-	            	$this->audit('Delete');
-	            	$return['status'] = 1;
-	        		$return['message'] ='Schedule successfully deleted';
-	        	} else {
-	        		$return['message'] ='Schedule not available';
-	        	}
-	        } else {
-	            $rid = str_replace('R', '', $schedule_id);
-	            $schedule = DB::table('repeat_schedule')->where('repeat_id', '=', $rid);	            
-	            if($schedule->delete()) {
-	            	$this->audit('Delete');
-	            	$return['status'] = 1;
-	        		$return['message'] ='Schedule successfully deleted';
-	        	} else {
-	        		$return['message'] ='Schedule not available';
-	        	}
-	        }
-    	}       
+		if($request->has('$') && $request->get('schedule_id') != '') {
 
-        return  Response::json($return);
+			$schedule_id = $request->get('schedule_id');
+			$id_check = strpbrk($schedule_id, 'R');
+			if ($id_check == false) {
+				$schedule = DB::table('schedule')->where('appt_id', '=', $schedule_id);
+				if($schedule->delete()) {
+					$this->audit('Delete');
+					$return['status'] = 1;
+					$return['message'] ='Schedule successfully deleted';
+				} else {
+					$return['message'] ='Schedule not available';
+				}
+			} else {
+				$rid = str_replace('R', '', $schedule_id);
+				$schedule = DB::table('repeat_schedule')->where('repeat_id', '=', $rid);	            
+				if($schedule->delete()) {
+					$this->audit('Delete');
+					$return['status'] = 1;
+					$return['message'] ='Schedule successfully deleted';
+				} else {
+					$return['message'] ='Schedule not available';
+				}
+			}
+		}       
+
+		return  Response::json($return);
 	}	
 
 }
