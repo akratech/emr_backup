@@ -1,5 +1,5 @@
-#!/bin/sh
-# install script for nosh-2
+#!/bin/sh  
+# install script for nosh-2  
 
 set -e
 
