@@ -430,7 +430,7 @@ class ScheduleController extends Controller
         }
 
         if ($user->group_id == '100') {        	
-            $pid = $request->get('pid');
+            $pid = $user->id;
             $row1 = DB::table('demographics')->where('pid', '=', $pid)->first();
             $title = $row1->lastname . ', ' . $row1->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row1->DOB)) . ') (ID: ' . $pid . ')';
         } else {    
