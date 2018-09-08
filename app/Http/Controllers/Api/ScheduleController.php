@@ -72,10 +72,17 @@ class ScheduleController extends Controller
 					$patients_info = '';
 				} else {
 					$pid = $row->pid;
-					$patients_info = DB::table('demographics')
+					$patients_info = DB::table('demographics')            
 					->select('demographics.pid','demographics.firstname','demographics.lastname','demographics.middle','demographics.title','demographics.sex','demographics.DOB','demographics.email','demographics.address', 'demographics.city','demographics.state','demographics.zip','demographics.language','demographics.active','demographics.photo','vitals.weight','vitals.height','vitals.BMI','vitals.bp_systolic','vitals.bp_diastolic','vitals.bp_position','vitals.pulse','vitals.respirations')
+					->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
 					->leftjoin('vitals', 'vitals.pid', '=', 'demographics.pid')
-					->where('demographics.pid', $pid)->first();
+					->where('demographics_relate.practice_id', '=', $user->practice_id)
+					->where(function($query_array1) use ($user) {
+						$query_array1->where('demographics.firstname', '=',  $user->firstname)
+						->orWhere('demographics.lastname', '=', $user->lastname);
+					})
+					->first();
+
 
 					if(isset($patients_info) && !empty($patients_info)) {
 
