@@ -33,6 +33,8 @@ class MessageController extends Controller
 		$return = array('status' => 1, 'message' => '', 'data' => array());
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', $user->practice_id)->first();
 		$user_from_id = $request->get('user_from_id');
+		$sentbyme = $request->get('sentbyme');
+		
 
 		$type_arr = array(
 			'inbox' => array('Inbox', 'fa-inbox'),
@@ -70,7 +72,9 @@ class MessageController extends Controller
 		$dropdown_array['items'] = $items;
 		$data['panel_dropdown'] = $this->dropdown_build($dropdown_array);
 		$list_array = [];
-		if(trim($user_from_id))
+		if(trim($sentbyme))
+			$query = DB::table('messaging')->where('message_from', '=', $user->id)->orderBy('message_id', 'desc')->get();
+		else if(trim($user_from_id))
 			$query = DB::table('messaging')->where('mailbox', '=', $user->id)->where('message_from', '=', $user_from_id)->orderBy('date', 'desc')->get();
 		else				
 			$query = DB::table('messaging')->where('mailbox', '=', $user->id)->orderBy('date', 'desc')->get();
